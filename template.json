@@ -46,7 +46,7 @@
     }
   },
   "Item": {
-    "types": ["item"],
+    "types": ["item", "feature", "spell"],
     "templates": {
       "base": {
         "description": ""
@@ -56,6 +56,13 @@
       "templates": ["base"],
       "quantity": 1,
       "weight": 0
+    },
+    "feature": {
+      "templates": ["base"]
+    },
+    "spell": {
+      "templates": ["base"],
+      "spellLevel": 1
     }
   }
 }
