@@ -23,3 +23,5 @@ This system includes a handful of helper CSS classes to help you lay out your sh
 ## Compiling the CSS
 
 This repo includes both CSS for the theme and SCSS source files. If you're new to CSS, it's probably easier to just work in those files directly and delete the SCSS directory. If you're interested in using a CSS preprocessor to add support for nesting, variables, and more, you can run `npm install` in this directory to install the dependencies for the scss compiler. After that, just run `npm run gulp` to compile the SCSS and start a process that watches for new changes.
+
+![image](http://mattsmith.in/images/boilerplate.png)
