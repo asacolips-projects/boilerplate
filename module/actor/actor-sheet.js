@@ -114,6 +114,16 @@ export class BoilerplateActorSheet extends ActorSheet {
 
     // Rollable abilities.
     html.find('.rollable').click(this._onRoll.bind(this));
+
+    // Drag events for macros.
+    if (this.actor.owner) {
+      let handler = ev => this._onDragItemStart(ev);
+      html.find('li.item').each((i, li) => {
+        if (li.classList.contains("inventory-header")) return;
+        li.setAttribute("draggable", true);
+        li.addEventListener("dragstart", handler, false);
+      });
+    }
   }
 
   /**

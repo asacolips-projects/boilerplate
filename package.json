@@ -11,7 +11,7 @@
   "browserslist": [
     "last 3 versions"
   ],
-  "author": "Asacolips",
+  "author": "John Doe",
   "license": "MIT",
   "private": true,
   "dependencies": {
