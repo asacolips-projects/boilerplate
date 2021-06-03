@@ -19,11 +19,18 @@ export class BoilerplateActorSheet extends ActorSheet {
 
   /** @override */
   getData() {
+    let isOwner = this.actor.isOwner;
     const data = super.getData();
-    data.dtypes = ["String", "Number", "Boolean"];
-    for (let attr of Object.values(data.data.attributes)) {
-      attr.isCheckbox = attr.dtype === "Boolean";
-    }
+
+    // Redefine the template data references to the actor.
+    const actorData = this.actor.data.toObject(false);
+    data.actor = actorData;
+    data.data = actorData.data;
+    data.rollData = this.actor.getRollData.bind(this.actor);
+
+    // Owned items.
+    data.items = actorData.items;
+    data.items.sort((a, b) => (a.sort || 0) - (b.sort || 0));
 
     // Prepare items.
     if (this.actor.data.type == 'character') {
@@ -81,9 +88,9 @@ export class BoilerplateActorSheet extends ActorSheet {
     }
 
     // Assign and return
-    actorData.gear = gear;
-    actorData.features = features;
-    actorData.spells = spells;
+    sheetData.gear = gear;
+    sheetData.features = features;
+    sheetData.spells = spells;
   }
 
   /* -------------------------------------------- */
@@ -101,14 +108,15 @@ export class BoilerplateActorSheet extends ActorSheet {
     // Update Inventory Item
     html.find('.item-edit').click(ev => {
       const li = $(ev.currentTarget).parents(".item");
-      const item = this.actor.getOwnedItem(li.data("itemId"));
+      const item = this.actor.items.get(li.data("itemId"));
       item.sheet.render(true);
     });
 
     // Delete Inventory Item
     html.find('.item-delete').click(ev => {
       const li = $(ev.currentTarget).parents(".item");
-      this.actor.deleteOwnedItem(li.data("itemId"));
+      const item = this.actor.items.get(li.data("itemId"));
+      item.delete();
       li.slideUp(200, () => this.render(false));
     });
 
@@ -131,7 +139,7 @@ export class BoilerplateActorSheet extends ActorSheet {
    * @param {Event} event   The originating click event
    * @private
    */
-  _onItemCreate(event) {
+  async _onItemCreate(event) {
     event.preventDefault();
     const header = event.currentTarget;
     // Get the type of item to create.
@@ -150,7 +158,7 @@ export class BoilerplateActorSheet extends ActorSheet {
     delete itemData.data["type"];
 
     // Finally, create the item!
-    return this.actor.createOwnedItem(itemData);
+    return await Item.create(itemData, {parent: this.actor});
   }
 
   /**
@@ -164,7 +172,7 @@ export class BoilerplateActorSheet extends ActorSheet {
     const dataset = element.dataset;
 
     if (dataset.roll) {
-      let roll = new Roll(dataset.roll, this.actor.data.data);
+      let roll = new Roll(dataset.roll, this.actor.getRollData());
       let label = dataset.label ? `Rolling ${dataset.label}` : '';
       roll.roll().toMessage({
         speaker: ChatMessage.getSpeaker({ actor: this.actor }),

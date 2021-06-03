@@ -70,7 +70,7 @@
                     <a class="item-control item-create" title="Create item" data-type="item"><i class="fas fa-plus"></i> Add item</a>
                   </div>
                 </li>
-            {{#each actor.gear as |item id|}}
+            {{#each gear as |item id|}}
                 <li class="item flexrow" data-item-id="{{item._id}}">
                     <div class="item-image"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
                     <h4 class="item-name">{{item.name}}</h4>
@@ -93,7 +93,7 @@
                     <a class="item-control item-create" title="Create item" data-type="feature"><i class="fas fa-plus"></i> Add item</a>
                   </div>
                 </li>
-            {{#each actor.features as |item id|}}
+            {{#each features as |item id|}}
                 <li class="item flexrow" data-item-id="{{item._id}}">
                     <div class="item-image"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
                     <h4 class="item-name">{{item.name}}</h4>
@@ -114,7 +114,7 @@
                   <div class="item-name">Name</div>
                   <div class="item-controls"></div>
                 </li>
-                {{#each actor.spells as |spells spellLevel|}}
+                {{#each spells as |spells spellLevel|}}
                     <li class="item flexrow item-header">
                       <div class="item-name">Level {{spellLevel}} Spells</div>
                       <div class="item-controls">

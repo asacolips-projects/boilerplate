@@ -29,7 +29,16 @@ export class BoilerplateItemSheet extends ItemSheet {
 
   /** @override */
   getData() {
+    // Retrieve base data structure.
     const data = super.getData();
+
+    // Grab the item's data.
+    const itemData = data.data;
+
+    // Re-define the template data references.
+    data.item = itemData;
+    data.data = itemData.data;
+
     return data;
   }
 
