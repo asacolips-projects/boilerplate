@@ -21,9 +21,9 @@ Hooks.once('init', async function() {
     decimals: 2
   };
 
-  // Define custom Entity classes
-  CONFIG.Actor.entityClass = BoilerplateActor;
-  CONFIG.Item.entityClass = BoilerplateItem;
+  // Define custom Document classes
+  CONFIG.Actor.documentClass = BoilerplateActor;
+  CONFIG.Item.documentClass = BoilerplateItem;
 
   // Register sheet application classes
   Actors.unregisterSheet("core", ActorSheet);
