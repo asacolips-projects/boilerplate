@@ -19,25 +19,18 @@ export class BoilerplateActorSheet extends ActorSheet {
 
   /** @override */
   getData() {
-    let isOwner = this.actor.isOwner;
-    const data = super.getData();
-
-    // Redefine the template data references to the actor.
-    const actorData = this.actor.data.toObject(false);
-    data.actor = actorData;
-    data.data = actorData.data;
-    data.rollData = this.actor.getRollData.bind(this.actor);
-
-    // Owned items.
-    data.items = actorData.items;
-    data.items.sort((a, b) => (a.sort || 0) - (b.sort || 0));
+    // Retrieve the data structure from the base sheet. You can inspect or log
+    // the context variable to see the structure, but some key properties for
+    // sheets are the actor object, the data object, whether or not it's
+    // editable, the items array, and the effects array.
+    const context = super.getData();
 
     // Prepare items.
     if (this.actor.data.type == 'character') {
-      this._prepareCharacterItems(data);
+      this._prepareCharacterItems(context);
     }
 
-    return data;
+    return context;
   }
 
   /**
@@ -47,8 +40,8 @@ export class BoilerplateActorSheet extends ActorSheet {
    *
    * @return {undefined}
    */
-  _prepareCharacterItems(sheetData) {
-    const actorData = sheetData.actor;
+  _prepareCharacterItems(context) {
+    const actorData = context.actor;
 
     // Initialize containers.
     const gear = [];
@@ -67,9 +60,7 @@ export class BoilerplateActorSheet extends ActorSheet {
     };
 
     // Iterate through items, allocating to containers
-    // let totalWeight = 0;
-    for (let i of sheetData.items) {
-      let item = i.data;
+    for (let i of context.items) {
       i.img = i.img || DEFAULT_TOKEN;
       // Append to gear.
       if (i.type === 'item') {
@@ -88,9 +79,9 @@ export class BoilerplateActorSheet extends ActorSheet {
     }
 
     // Assign and return
-    sheetData.gear = gear;
-    sheetData.features = features;
-    sheetData.spells = spells;
+    context.gear = gear;
+    context.features = features;
+    context.spells = spells;
   }
 
   /* -------------------------------------------- */
@@ -99,18 +90,19 @@ export class BoilerplateActorSheet extends ActorSheet {
   activateListeners(html) {
     super.activateListeners(html);
 
-    // Everything below here is only needed if the sheet is editable
-    if (!this.options.editable) return;
-
-    // Add Inventory Item
-    html.find('.item-create').click(this._onItemCreate.bind(this));
-
-    // Update Inventory Item
+    // Render the item sheet for viewing/editing prior to the editable check.
     html.find('.item-edit').click(ev => {
       const li = $(ev.currentTarget).parents(".item");
       const item = this.actor.items.get(li.data("itemId"));
       item.sheet.render(true);
     });
+
+    // -------------------------------------------------------------
+    // Everything below here is only needed if the sheet is editable
+    if (!this.isEditable) return;
+
+    // Add Inventory Item
+    html.find('.item-create').click(this._onItemCreate.bind(this));
 
     // Delete Inventory Item
     html.find('.item-delete').click(ev => {
