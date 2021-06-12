@@ -53,4 +53,22 @@ export class BoilerplateActor extends Actor {
     }
   }
 
+  /**
+   * Override getRollData() that's supplied to rolls.
+   */
+  getRollData() {
+    const data = super.getRollData();
+
+    // Copy the ability scores to the top level, so that rolls can use
+    // formulas like `@str.mod + 4`.
+    for (let [k, v] of Object.entries(data.abilities)) {
+      data[k] = foundry.utils.deepClone(v);
+    }
+
+    // Add level for easier access, or fall back to 0.
+    data.lvl = data.attributes.level.value ?? 0;
+
+    return data;
+  }
+
 }

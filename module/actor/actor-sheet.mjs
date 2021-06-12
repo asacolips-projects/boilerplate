@@ -25,8 +25,15 @@ export class BoilerplateActorSheet extends ActorSheet {
     // editable, the items array, and the effects array.
     const context = super.getData();
 
+    // Use a safe clone of the actor data for further operations.
+    const actorData = this.actor.data.toObject(false);
+
+    // Add the actor's data to context.data for easier access, as well as flags.
+    context.data = actorData.data;
+    context.flags = actorData.data.flags;
+
     // Prepare items.
-    if (this.actor.data.type == 'character') {
+    if (actorData.type == 'character') {
       this._prepareCharacterItems(context);
     }
 
@@ -163,13 +170,25 @@ export class BoilerplateActorSheet extends ActorSheet {
     const element = event.currentTarget;
     const dataset = element.dataset;
 
+    // Handle item rolls.
+    if (dataset.rollType) {
+      if (dataset.rollType == 'item') {
+        const itemId = element.closest('.item').dataset.itemId;
+        const item = this.actor.items.get(itemId);
+        if (item) return item.roll();
+      }
+    }
+
+    // Handle rolls that supply the formula directly.
     if (dataset.roll) {
-      let roll = new Roll(dataset.roll, this.actor.getRollData());
       let label = dataset.label ? `Rolling ${dataset.label}` : '';
-      roll.roll().toMessage({
+      let roll = new Roll(dataset.roll, this.actor.getRollData()).roll();
+      roll.toMessage({
         speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-        flavor: label
+        flavor: label,
+        rollMode: game.settings.get('core', 'rollMode'),
       });
+      return roll;
     }
   }
 
