@@ -47,4 +47,7 @@ exports.default = gulp.series(
   compileScss,
   watchUpdates
 );
+exports.build = gulp.series(
+  compileScss
+);
 exports.css = css;

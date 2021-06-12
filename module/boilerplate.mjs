@@ -1,8 +1,8 @@
 // Import Modules
-import { BoilerplateActor } from "./actor/actor.mjs";
-import { BoilerplateActorSheet } from "./actor/actor-sheet.mjs";
-import { BoilerplateItem } from "./item/item.mjs";
-import { BoilerplateItemSheet } from "./item/item-sheet.mjs";
+import { BoilerplateActor } from "./documents/actor.mjs";
+import { BoilerplateItem } from "./documents/item.mjs";
+import { BoilerplateActorSheet } from "./sheets/actor-sheet.mjs";
+import { BoilerplateItemSheet } from "./sheets/item-sheet.mjs";
 
 /* -------------------------------------------- */
 /*  Init Hook                                   */

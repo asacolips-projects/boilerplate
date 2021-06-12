@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "CSS compiler for the Boilerplate system",
   "scripts": {
-    "build": "gulp",
+    "build": "gulp build",
     "compile": "gulp css",
     "watch": "gulp",
     "gulp": "gulp"
