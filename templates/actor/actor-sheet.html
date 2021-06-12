@@ -8,7 +8,7 @@
             {{!-- The grid classes are defined in scss/global/_grid.scss. To use,
             use both the "grid" and "grid-Ncol" class where "N" can be any number
             from 1 to 12 and will create that number of columns.  --}}
-            <div class="resources grid grid-2col">
+            <div class="resources grid grid-3col">
               {{!-- "flex-group-center" is also defined in the _grid.scss file
               and it will add a small amount of padding, a border, and will
               center all of its child elements content and text. --}}
@@ -26,6 +26,12 @@
                     <input type="text" name="data.power.value" value="{{data.power.value}}" data-dtype="Number"/>
                     <span> / </span>
                     <input type="text" name="data.power.max" value="{{data.power.max}}" data-dtype="Number"/>
+                  </div>
+              </div>
+              <div class="resource flex-group-center">
+                  <label for="data.attributes.level.value" class="resource-label">Level</label>
+                  <div class="resource-content flexrow flex-center flex-between">
+                    <input type="text" name="data.attributes.level.value" value="{{data.attributes.level.value}}" data-dtype="Number"/>
                   </div>
               </div>
           </div>
