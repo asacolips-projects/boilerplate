@@ -24,3 +24,23 @@
 .flex-between {
   justify-content: space-between;
 }
+
+.flexlarge {
+  flex: 2;
+}
+
+// Alignment styles.
+.align-left {
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.align-right {
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.align-center {
+  justify-content: center;
+  text-align: center;
+}

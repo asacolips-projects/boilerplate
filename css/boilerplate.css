@@ -158,9 +158,9 @@
   grid-column-end: span 12;
 }
 
-.flex-center,
-.flex-left,
-.flex-right {
+.flex-group-center,
+.flex-group-left,
+.flex-group-right {
   -webkit-box-pack: center;
   -ms-flex-pack: center;
   justify-content: center;
@@ -170,14 +170,14 @@
   text-align: center;
 }
 
-.flex-left {
+.flex-group-left {
   -webkit-box-pack: start;
   -ms-flex-pack: start;
   justify-content: flex-start;
   text-align: left;
 }
 
-.flex-right {
+.flex-group-right {
   -webkit-box-pack: end;
   -ms-flex-pack: end;
   justify-content: flex-end;
@@ -196,6 +196,33 @@
   justify-content: space-between;
 }
 
+.flexlarge {
+  -webkit-box-flex: 2;
+  -ms-flex: 2;
+  flex: 2;
+}
+
+.align-left {
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.align-right {
+  -webkit-box-pack: end;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.align-center {
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  text-align: center;
+}
+
 /* Styles limited to boilerplate sheets */
 .boilerplate .item-form {
   font-family: "Roboto", sans-serif;
@@ -203,8 +230,8 @@
 
 .boilerplate .sheet-header {
   -webkit-box-flex: 0;
-  -ms-flex: 0 0 210px;
-  flex: 0 0 210px;
+  -ms-flex: 0 auto;
+  flex: 0 auto;
   overflow: hidden;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -270,23 +297,6 @@
 
 .boilerplate .resource-label {
   font-weight: bold;
-  text-transform: uppercase;
-}
-
-.boilerplate .tabs {
-  height: 40px;
-  border-top: 1px solid #AAA;
-  border-bottom: 1px solid #AAA;
-}
-
-.boilerplate .tabs .item {
-  line-height: 40px;
-  font-weight: bold;
-}
-
-.boilerplate .tabs .item.active {
-  text-decoration: underline;
-  text-shadow: none;
 }
 
 .boilerplate .items-list {

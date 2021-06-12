@@ -11,7 +11,7 @@ export class BoilerplateActorSheet extends ActorSheet {
       template: "systems/boilerplate/templates/actor/actor-sheet.html",
       width: 600,
       height: 600,
-      tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "description" }]
+      tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "features" }]
     });
   }
 
@@ -34,7 +34,7 @@ export class BoilerplateActorSheet extends ActorSheet {
 
     // Prepare items.
     if (actorData.type == 'character') {
-      this._prepareCharacterItems(context);
+      this._prepareCharacterData(context);
     }
 
     return context;
@@ -47,8 +47,11 @@ export class BoilerplateActorSheet extends ActorSheet {
    *
    * @return {undefined}
    */
-  _prepareCharacterItems(context) {
-    const actorData = context.actor;
+  _prepareCharacterData(context) {
+    // Handle ability scores.
+    for (let [k, v] of Object.entries(context.data.abilities)) {
+      v.label = game.i18n.localize(CONFIG.BOILERPLATE.abilities[k]) ?? k;
+    }
 
     // Initialize containers.
     const gear = [];
@@ -181,7 +184,7 @@ export class BoilerplateActorSheet extends ActorSheet {
 
     // Handle rolls that supply the formula directly.
     if (dataset.roll) {
-      let label = dataset.label ? `Rolling ${dataset.label}` : '';
+      let label = dataset.label ? `[ability] ${dataset.label}` : '';
       let roll = new Roll(dataset.roll, this.actor.getRollData()).roll();
       roll.toMessage({
         speaker: ChatMessage.getSpeaker({ actor: this.actor }),
