@@ -1,3 +1,5 @@
+import {onManageActiveEffect, prepareActiveEffectCategories} from "../helpers/effects.mjs";
+
 /**
  * Extend the basic ActorSheet with some very simple modifications
  * @extends {ActorSheet}
@@ -36,6 +38,9 @@ export class BoilerplateActorSheet extends ActorSheet {
     if (actorData.type == 'character') {
       this._prepareCharacterData(context);
     }
+
+    // Prepare active effects
+    context.effects = prepareActiveEffectCategories(this.actor.effects);
 
     return context;
   }
@@ -121,6 +126,9 @@ export class BoilerplateActorSheet extends ActorSheet {
       item.delete();
       li.slideUp(200, () => this.render(false));
     });
+
+    // Active Effect management
+    html.find(".effect-control").click(ev => onManageActiveEffect(ev, this.actor));
 
     // Rollable abilities.
     html.find('.rollable').click(this._onRoll.bind(this));

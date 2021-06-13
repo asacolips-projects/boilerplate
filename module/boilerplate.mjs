@@ -1,8 +1,11 @@
-// Import Modules
+// Import document classes.
 import { BoilerplateActor } from "./documents/actor.mjs";
 import { BoilerplateItem } from "./documents/item.mjs";
+// Import sheet classes.
 import { BoilerplateActorSheet } from "./sheets/actor-sheet.mjs";
 import { BoilerplateItemSheet } from "./sheets/item-sheet.mjs";
+// Import helper/utility classes and constants.
+import { preloadHandlebarsTemplates } from "./helpers/templates.mjs";
 import { BOILERPLATE } from "./helpers/config.mjs";
 
 /* -------------------------------------------- */
@@ -40,6 +43,9 @@ Hooks.once('init', async function() {
   Actors.registerSheet("boilerplate", BoilerplateActorSheet, { makeDefault: true });
   Items.unregisterSheet("core", ItemSheet);
   Items.registerSheet("boilerplate", BoilerplateItemSheet, { makeDefault: true });
+
+  // Preload Handlebars templates.
+  return preloadHandlebarsTemplates();
 });
 
 /* -------------------------------------------- */

@@ -11,5 +11,12 @@
   "BOILERPLATE.AbilityDexAbbr": "dex",
   "BOILERPLATE.AbilityIntAbbr": "int",
   "BOILERPLATE.AbilityWisAbbr": "wis",
-  "BOILERPLATE.AbilityChaAbbr": "cha"
+  "BOILERPLATE.AbilityChaAbbr": "cha",
+
+  "BOILERPLATE.EffectCreate": "Create Effect",
+  "BOILERPLATE.EffectToggle": "Toggle Effect",
+  "BOILERPLATE.EffectEdit": "Edit Effect",
+  "BOILERPLATE.EffectDelete": "Delete Effect",
+
+  "BOILERPLATE.Add": "Add"
 }

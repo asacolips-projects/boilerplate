@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Martel:wght@400;800&family=Roboto:wght@300;400;500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
 /* Global styles */
 .window-app {
   font-family: "Roboto", sans-serif;
@@ -224,6 +224,13 @@
 }
 
 /* Styles limited to boilerplate sheets */
+.boilerplate {
+  /* ----------------------------------------- */
+  /*  Items Lists                              */
+  /* ----------------------------------------- */
+  /* Example style for Boilerplate (can be removed if not needed) */
+}
+
 .boilerplate .item-form {
   font-family: "Roboto", sans-serif;
 }
@@ -299,42 +306,158 @@
   font-weight: bold;
 }
 
-.boilerplate .items-list {
-  list-style: none;
-  margin: 7px 0;
+.boilerplate .items-header {
+  height: 28px;
+  margin: 2px 0;
   padding: 0;
-  overflow-y: auto;
-}
-
-.boilerplate .items-list .item-header {
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.05);
+  border: 2px groove #eeede0;
   font-weight: bold;
 }
 
-.boilerplate .items-list .item {
-  height: 30px;
-  line-height: 24px;
-  padding: 3px 0;
-  border-bottom: 1px solid #BBB;
+.boilerplate .items-header > * {
+  font-size: 14px;
+  text-align: center;
 }
 
-.boilerplate .items-list .item .item-image {
-  -webkit-box-flex: 0;
-  -ms-flex: 0 0 24px;
-  flex: 0 0 24px;
-  margin-right: 5px;
+.boilerplate .items-header .item-name {
+  font-weight: bold;
+  padding-left: 5px;
+  text-align: left;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
 }
 
-.boilerplate .items-list .item img {
-  display: block;
+.boilerplate .items-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  color: #444;
+}
+
+.boilerplate .items-list .item-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
 .boilerplate .items-list .item-name {
+  -webkit-box-flex: 2;
+  -ms-flex: 2;
+  flex: 2;
   margin: 0;
+  overflow: hidden;
+  font-size: 13px;
+  text-align: left;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.boilerplate .items-list .item-name h3, .boilerplate .items-list .item-name h4 {
+  margin: 0;
+  white-space: nowrap;
+  overflow-x: hidden;
 }
 
 .boilerplate .items-list .item-controls {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
   -webkit-box-flex: 0;
-  -ms-flex: 0 0 86px;
-  flex: 0 0 86px;
-  text-align: right;
+  -ms-flex: 0 0 100px;
+  flex: 0 0 100px;
+  -webkit-box-pack: end;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
+}
+
+.boilerplate .items-list .item-controls a {
+  font-size: 12px;
+  text-align: center;
+  margin: 0 6px;
+}
+
+.boilerplate .items-list .item {
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding: 0 2px;
+  border-bottom: 1px solid #c9c7b8;
+}
+
+.boilerplate .items-list .item:last-child {
+  border-bottom: none;
+}
+
+.boilerplate .items-list .item .item-name {
+  color: #191813;
+}
+
+.boilerplate .items-list .item .item-name .item-image {
+  -webkit-box-flex: 0;
+  -ms-flex: 0 0 30px;
+  flex: 0 0 30px;
+  height: 30px;
+  background-size: 30px;
+  border: none;
+  margin-right: 5px;
+}
+
+.boilerplate .items-list .item-prop {
+  text-align: center;
+  border-left: 1px solid #c9c7b8;
+  border-right: 1px solid #c9c7b8;
+  font-size: 12px;
+}
+
+.boilerplate .items-list .items-header {
+  height: 28px;
+  margin: 2px 0;
+  padding: 0;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.05);
+  border: 2px groove #eeede0;
+  font-weight: bold;
+}
+
+.boilerplate .items-list .items-header > * {
+  font-size: 12px;
+  text-align: center;
+}
+
+.boilerplate .items-list .items-header .item-name {
+  padding-left: 5px;
+  text-align: left;
+}
+
+.boilerplate .item-formula {
+  -webkit-box-flex: 0;
+  -ms-flex: 0 0 200px;
+  flex: 0 0 200px;
+  padding: 0 8px;
+}
+
+.boilerplate .effects .item .effect-source,
+.boilerplate .effects .item .effect-duration,
+.boilerplate .effects .item .effect-controls {
+  text-align: center;
+  border-left: 1px solid #c9c7b8;
+  border-right: 1px solid #c9c7b8;
+  font-size: 12px;
+}
+
+.boilerplate .effects .item .effect-controls {
+  border: none;
 }
