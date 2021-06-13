@@ -35,16 +35,18 @@ export class BoilerplateActor extends Actor {
 
     // Make separate methods for each Actor type (character, npc, etc.) to keep
     // things organized.
-    if (actorData.type === 'character') this._prepareCharacterData(actorData);
+    this._prepareCharacterData(actorData);
+    this._prepareNpcData(actorData);
   }
 
   /**
    * Prepare Character type specific data
    */
   _prepareCharacterData(actorData) {
-    const data = actorData.data;
+    if (actorData.type !== 'character') return;
 
     // Make modifications to data here. For example:
+    const data = actorData.data;
 
     // Loop through ability scores, and add their modifiers to our sheet output.
     for (let [key, ability] of Object.entries(data.abilities)) {
@@ -54,21 +56,56 @@ export class BoilerplateActor extends Actor {
   }
 
   /**
+   * Prepare NPC type specific data.
+   */
+  _prepareNpcData(actorData) {
+    if (actorData.type !== 'npc') return;
+
+    // Make modifications to data here. For example:
+    const data = actorData.data;
+    data.xp = (data.cr * data.cr) * 100;
+  }
+
+  /**
    * Override getRollData() that's supplied to rolls.
    */
   getRollData() {
     const data = super.getRollData();
 
+    // Prepare character roll data.
+    this._getCharacterRollData(data);
+    this._getNpcRollData(data);
+
+    return data;
+  }
+
+  /**
+   * Prepare character roll data.
+   */
+  _getCharacterRollData(data) {
+    if (this.data.type !== 'character') return;
+
     // Copy the ability scores to the top level, so that rolls can use
     // formulas like `@str.mod + 4`.
-    for (let [k, v] of Object.entries(data.abilities)) {
-      data[k] = foundry.utils.deepClone(v);
+    if (data.abilities) {
+      for (let [k, v] of Object.entries(data.abilities)) {
+        data[k] = foundry.utils.deepClone(v);
+      }
     }
 
     // Add level for easier access, or fall back to 0.
-    data.lvl = data.attributes.level.value ?? 0;
+    if (data.attributes.level) {
+      data.lvl = data.attributes.level.value ?? 0;
+    }
+  }
 
-    return data;
+  /**
+   * Prepare NPC roll data.
+   */
+  _getNpcRollData(data) {
+    if (this.data.type !== 'npc') return;
+
+    // Process additional NPC data here.
   }
 
 }

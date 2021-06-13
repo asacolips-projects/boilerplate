@@ -17,6 +17,11 @@ export class BoilerplateActorSheet extends ActorSheet {
     });
   }
 
+  /** @override */
+  get template() {
+    return `systems/boilerplate/templates/actor/actor-${this.actor.data.type}-sheet.html`;
+  }
+
   /* -------------------------------------------- */
 
   /** @override */
@@ -34,9 +39,15 @@ export class BoilerplateActorSheet extends ActorSheet {
     context.data = actorData.data;
     context.flags = actorData.flags;
 
-    // Prepare items.
+    // Prepare character data and items.
     if (actorData.type == 'character') {
+      this._prepareItems(context);
       this._prepareCharacterData(context);
+    }
+
+    // Prepare NPC data and items.
+    if (actorData.type == 'npc') {
+      this._prepareItems(context);
     }
 
     // Add roll data for TinyMCE editors.
@@ -60,7 +71,16 @@ export class BoilerplateActorSheet extends ActorSheet {
     for (let [k, v] of Object.entries(context.data.abilities)) {
       v.label = game.i18n.localize(CONFIG.BOILERPLATE.abilities[k]) ?? k;
     }
+  }
 
+  /**
+   * Organize and classify Items for Character sheets.
+   *
+   * @param {Object} actorData The actor to prepare.
+   *
+   * @return {undefined}
+   */
+  _prepareItems(context) {
     // Initialize containers.
     const gear = [];
     const features = [];
@@ -100,7 +120,7 @@ export class BoilerplateActorSheet extends ActorSheet {
     context.gear = gear;
     context.features = features;
     context.spells = spells;
-  }
+   }
 
   /* -------------------------------------------- */
 
