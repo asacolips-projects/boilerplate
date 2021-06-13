@@ -17,7 +17,7 @@ export class BoilerplateItem extends Item {
    * @private
    */
    getRollData() {
-     // If present, return the actor's roll data.
+    // If present, return the actor's roll data.
     if ( !this.actor ) return null;
     const rollData = this.actor.getRollData();
     rollData.item = foundry.utils.deepClone(this.data.data);

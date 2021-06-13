@@ -35,6 +35,13 @@ export class BoilerplateItemSheet extends ItemSheet {
     // Use a safe clone of the item data for further operations.
     const itemData = context.item.data;
 
+    // Retrieve the roll data for TinyMCE editors.
+    context.rollData = {};
+    let actor = this.object?.parent ?? null;
+    if (actor) {
+      context.rollData = actor.getRollData();
+    }
+
     // Add the actor's data to context.data for easier access, as well as flags.
     context.data = itemData.data;
     context.flags = itemData.flags;

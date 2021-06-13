@@ -39,6 +39,9 @@ export class BoilerplateActorSheet extends ActorSheet {
       this._prepareCharacterData(context);
     }
 
+    // Add roll data for TinyMCE editors.
+    context.rollData = context.actor.getRollData();
+
     // Prepare active effects
     context.effects = prepareActiveEffectCategories(this.actor.effects);
 
