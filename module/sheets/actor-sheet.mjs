@@ -157,7 +157,7 @@ export class BoilerplateActorSheet extends ActorSheet {
     html.find('.rollable').click(this._onRoll.bind(this));
 
     // Drag events for macros.
-    if (this.actor.owner) {
+    if (this.actor.isOwner) {
       let handler = ev => this._onDragStart(ev);
       html.find('li.item').each((i, li) => {
         if (li.classList.contains("inventory-header")) return;
@@ -216,7 +216,7 @@ export class BoilerplateActorSheet extends ActorSheet {
     // Handle rolls that supply the formula directly.
     if (dataset.roll) {
       let label = dataset.label ? `[ability] ${dataset.label}` : '';
-      let roll = new Roll(dataset.roll, this.actor.getRollData()).roll();
+      let roll = new Roll(dataset.roll, this.actor.getRollData());
       roll.toMessage({
         speaker: ChatMessage.getSpeaker({ actor: this.actor }),
         flavor: label,
