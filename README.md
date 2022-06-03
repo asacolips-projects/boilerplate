@@ -6,6 +6,14 @@ This system is a boilerplate system that you can use as a starting point for bui
 
 Before installing this system, you should rename any files that have `boilerplate` in their filename to use whatever machine-safe name your system needs, such as `adnd2e` if you were building a system for 2nd edition Advanced Dungeons & Dragons. In addition, you should search through the files for `boilerplate` and `Boilerplate` and do the same for those, replacing them with appropriate names for your system.
 
+### System Generator
+
+This project is also available as generator that can be run with npm: https://www.npmjs.com/package/generator-foundry
+
+### Tutorial
+
+For much more information on how to use this system as a starting point for making your own, see the [full tutorial on the Foundry Wiki](https://foundryvtt.wiki/en/development/guides/SD-tutorial)!
+
 ## Sheet Layout
 
 This system includes a handful of helper CSS classes to help you lay out your sheets if you're not comfortable diving into CSS fully. Those are:
