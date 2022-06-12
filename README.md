@@ -1,5 +1,7 @@
 # Boilerplate System
 
+![Foundry v9](https://img.shields.io/badge/foundry-v9-green)
+
 This system is a boilerplate system that you can use as a starting point for building your own custom systems. It's similar to Simple World-building, but has examples of creating attributes in code rather than dynamically through the UI.
 
 ## Usage
@@ -9,6 +11,12 @@ Before installing this system, you should rename any files that have `boilerplat
 ### System Generator
 
 This project is also available as generator that can be run with npm: https://www.npmjs.com/package/generator-foundry
+
+### Vue 3 Boilerplate
+
+Alternatively, there's another build of this system that supports using Vue 3 components (ES module build target) for character sheet templates.
+
+Head over to the [Vue3Boilerplate System](https://gitlab.com/asacolips-projects/foundry-mods/vue3boilerplate) repo if you're interested in using Vue!
 
 ### Tutorial
 
