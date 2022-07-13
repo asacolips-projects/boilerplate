@@ -1,7 +1,7 @@
 const gulp = require('gulp');
 const prefix = require('gulp-autoprefixer');
 const sourcemaps = require('gulp-sourcemaps');
-const sass = require('gulp-sass');
+const sass = require('gulp-sass')(require('sass'));
 
 /* ----------------------------------------- */
 /*  Compile Sass
@@ -20,6 +20,7 @@ function compileScss() {
     outputStyle: 'expanded'
   };
   return gulp.src(SYSTEM_SCSS)
+    .pipe(sourcemaps.init())
     .pipe(
       sass(options)
         .on('error', handleError)
@@ -27,6 +28,7 @@ function compileScss() {
     .pipe(prefix({
       cascade: false
     }))
+    .pipe(sourcemaps.write())
     .pipe(gulp.dest("./css"))
 }
 const css = gulp.series(compileScss);
