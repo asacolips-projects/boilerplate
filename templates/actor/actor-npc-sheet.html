@@ -14,29 +14,29 @@
         and it will add a small amount of padding, a border, and will
         center all of its child elements content and text. --}}
         <div class="resource flex-group-center">
-          <label for="data.health.value" class="resource-label">Health</label>
+          <label for="system.health.value" class="resource-label">Health</label>
           <div class="resource-content flexrow flex-center flex-between">
-            <input type="text" name="data.health.value" value="{{data.health.value}}" data-dtype="Number"/>
+            <input type="text" name="system.health.value" value="{{system.health.value}}" data-dtype="Number"/>
             <span> / </span>
-            <input type="text" name="data.health.max" value="{{data.health.max}}" data-dtype="Number"/>
+            <input type="text" name="system.health.max" value="{{system.health.max}}" data-dtype="Number"/>
           </div>
         </div>
 
         <div class="resource flex-group-center">
-          <label for="data.power.value" class="resource-label">Power</label>
+          <label for="system.power.value" class="resource-label">Power</label>
           <div class="resource-content flexrow flex-center flex-between">
-            <input type="text" name="data.power.value" value="{{data.power.value}}" data-dtype="Number"/>
+            <input type="text" name="system.power.value" value="{{system.power.value}}" data-dtype="Number"/>
             <span> / </span>
-            <input type="text" name="data.power.max" value="{{data.power.max}}" data-dtype="Number"/>
+            <input type="text" name="system.power.max" value="{{system.power.max}}" data-dtype="Number"/>
           </div>
         </div>
 
         <div class="resource flex-group-center">
-          <label for="data.cr" class="resource-label">CR / XP</label>
+          <label for="system.cr" class="resource-label">CR / XP</label>
           <div class="resource-content flexrow flex-center flex-between">
-            <input type="text" name="data.cr" value="{{data.cr}}" data-dtype="Number"/>
+            <input type="text" name="system.cr" value="{{system.cr}}" data-dtype="Number"/>
             <span> / </span>
-            <input type="text" disabled="true" name="data.xp" value="{{data.xp}}" data-dtype="Number"/>
+            <input type="text" disabled="true" name="system.xp" value="{{system.xp}}" data-dtype="Number"/>
           </div>
         </div>
 
@@ -58,7 +58,7 @@
     {{!-- Biography Tab --}}
     <div class="tab biography" data-group="primary" data-tab="description">
       {{!-- If you want TinyMCE editors to output inline rolls when rendered, you need to pass the actor's roll data to the rollData property. --}}
-      {{editor content=data.biography target="data.biography" rollData=rollData button=true owner=owner editable=editable}}
+      {{editor system.biography target="system.biography" rollData=rollData button=true owner=owner editable=editable}}
     </div>
 
     {{!-- Owned Items Tab --}}

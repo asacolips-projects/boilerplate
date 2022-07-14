@@ -17,7 +17,7 @@
 
     {{!-- Description Tab --}}
     <div class="tab" data-group="primary" data-tab="description">
-      {{editor content=data.description target="data.description" rollData=rollData button=true owner=owner editable=editable}}
+      {{editor system.description target="system.description" rollData=rollData button=true owner=owner editable=editable}}
     </div>
 
     {{!-- Attributes Tab --}}
@@ -25,7 +25,7 @@
       {{!-- As you add new fields, add them in here! --}}
       <div class="resource">
         <label class="resource-label">Spell Level</label>
-        <input type="text" name="data.spellLevel" value="{{data.spellLevel}}" data-dtype="Number"/>
+        <input type="text" name="system.spellLevel" value="{{system.spellLevel}}" data-dtype="Number"/>
       </div>
     </div>
   </section>

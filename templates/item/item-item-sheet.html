@@ -6,11 +6,11 @@
       <div class="grid grid-2col">
         <div class="resource">
           <label class="resource-label">Quantity</label>
-          <input type="text" name="data.quantity" value="{{data.quantity}}" data-dtype="Number"/>
+          <input type="text" name="system.quantity" value="{{system.quantity}}" data-dtype="Number"/>
         </div>
         <div class="resource">
           <label class="resource-label">Weight</label>
-          <input type="text" name="data.weight" value="{{data.weight}}" data-dtype="Number"/>
+          <input type="text" name="system.weight" value="{{system.weight}}" data-dtype="Number"/>
         </div>
       </div>
     </div>
@@ -28,7 +28,7 @@
     {{!-- Description Tab --}}
     <div class="tab" data-group="primary" data-tab="description">
       {{!-- To render inline rolls in a TinyMCE editor, you need to pass the parent actor's (if any) roll data to the rollData prop. --}}
-      {{editor content=data.description target="data.description" rollData=rollData button=true owner=owner editable=editable}}
+      {{editor system.description target="system.description" rollData=rollData button=true owner=owner editable=editable}}
     </div>
 
     {{!-- Attributes Tab --}}
@@ -36,7 +36,7 @@
       {{!-- As you add new fields, add them in here! --}}
       <div class="resource">
         <label class="resource-label">Roll Formula</label>
-        <input type="text" name="data.formula" value="{{data.formula}}" data-dtype="String"/>
+        <input type="text" name="system.formula" value="{{system.formula}}" data-dtype="String"/>
       </div>
     </div>
   </section>

@@ -29,8 +29,8 @@ export class BoilerplateActor extends Actor {
    * is queried and has a roll executed directly from it).
    */
   prepareDerivedData() {
-    const actorData = this.data;
-    const data = actorData.data;
+    const actorData = this;
+    const systemData = actorData.system;
     const flags = actorData.flags.boilerplate || {};
 
     // Make separate methods for each Actor type (character, npc, etc.) to keep
@@ -46,10 +46,10 @@ export class BoilerplateActor extends Actor {
     if (actorData.type !== 'character') return;
 
     // Make modifications to data here. For example:
-    const data = actorData.data;
+    const systemData = actorData.system;
 
     // Loop through ability scores, and add their modifiers to our sheet output.
-    for (let [key, ability] of Object.entries(data.abilities)) {
+    for (let [key, ability] of Object.entries(systemData.abilities)) {
       // Calculate the modifier using d20 rules.
       ability.mod = Math.floor((ability.value - 10) / 2);
     }
@@ -62,8 +62,8 @@ export class BoilerplateActor extends Actor {
     if (actorData.type !== 'npc') return;
 
     // Make modifications to data here. For example:
-    const data = actorData.data;
-    data.xp = (data.cr * data.cr) * 100;
+    const systemData = actorData.system;
+    systemData.xp = (systemData.cr * systemData.cr) * 100;
   }
 
   /**
@@ -83,7 +83,7 @@ export class BoilerplateActor extends Actor {
    * Prepare character roll data.
    */
   _getCharacterRollData(data) {
-    if (this.data.type !== 'character') return;
+    if (this.type !== 'character') return;
 
     // Copy the ability scores to the top level, so that rolls can use
     // formulas like `@str.mod + 4`.
@@ -103,7 +103,7 @@ export class BoilerplateActor extends Actor {
    * Prepare NPC roll data.
    */
   _getNpcRollData(data) {
-    if (this.data.type !== 'npc') return;
+    if (this.type !== 'npc') return;
 
     // Process additional NPC data here.
   }

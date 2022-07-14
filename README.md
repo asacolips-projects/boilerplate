@@ -1,6 +1,6 @@
 # Boilerplate System
 
-![Foundry v9](https://img.shields.io/badge/foundry-v9-green)
+![Foundry v10](https://img.shields.io/badge/foundry-v10-green)
 
 This system is a boilerplate system that you can use as a starting point for building your own custom systems. It's similar to Simple World-building, but has examples of creating attributes in code rather than dynamically through the UI.
 

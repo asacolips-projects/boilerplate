@@ -1,11 +1,18 @@
 {
   "name": "boilerplate",
+  "id": "boilerplate",
   "title": "Boilerplate",
   "description": "The Boilerplate system for FoundryVTT!",
-  "version": "1.1.1",
-  "minimumCoreVersion": "0.8.6",
-  "compatibleCoreVersion": "9",
-  "author": "Asacolips",
+  "version": "1.2.0",
+  "minimumCoreVersion": "10",
+  "compatibleCoreVersion": "10",
+  "compatibility": {
+    "minimum": 10,
+    "verified": "10.272"
+  },
+  "authors": [{
+    "name": "Asacolips"
+  }],
   "esmodules": ["module/boilerplate.mjs"],
   "styles": ["css/boilerplate.css"],
   "scripts": [],
