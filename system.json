@@ -1,14 +1,12 @@
 {
-  "name": "boilerplate",
   "id": "boilerplate",
   "title": "Boilerplate",
   "description": "The Boilerplate system for FoundryVTT!",
   "version": "1.2.0",
-  "minimumCoreVersion": "10",
-  "compatibleCoreVersion": "10",
   "compatibility": {
     "minimum": 10,
-    "verified": "10.272"
+    "verified": "10.287",
+    "maximum": 10
   },
   "authors": [{
     "name": "Asacolips"
@@ -31,5 +29,6 @@
   "url": "",
   "manifest": "",
   "download": "",
-  "license": "LICENSE.txt"
+  "license": "LICENSE.txt",
+  "changelog": "CHANGELOG.md"
 }
