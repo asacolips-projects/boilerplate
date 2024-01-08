@@ -12,7 +12,7 @@ import { BOILERPLATE } from "./helpers/config.mjs";
 /*  Init Hook                                   */
 /* -------------------------------------------- */
 
-Hooks.once('init', async function() {
+Hooks.once('init', function() {
 
   // Add utility classes to the global game object so that they're more easily
   // accessible in global contexts.
@@ -71,7 +71,7 @@ Handlebars.registerHelper('toLowerCase', function(str) {
 /*  Ready Hook                                  */
 /* -------------------------------------------- */
 
-Hooks.once("ready", async function() {
+Hooks.once("ready", function() {
   // Wait to register hotbar drop hook on ready so that modules could register earlier if they want to
   Hooks.on("hotbarDrop", (bar, data, slot) => createItemMacro(data, slot));
 });
