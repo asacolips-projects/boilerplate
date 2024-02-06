@@ -10,7 +10,7 @@ import {
 export class BoilerplateActorSheet extends ActorSheet {
   /** @override */
   static get defaultOptions() {
-    return mergeObject(super.defaultOptions, {
+    return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ['boilerplate', 'sheet', 'actor'],
       template: 'systems/boilerplate/templates/actor/actor-sheet.hbs',
       width: 600,
@@ -41,7 +41,7 @@ export class BoilerplateActorSheet extends ActorSheet {
     const context = super.getData();
 
     // Use a safe clone of the actor data for further operations.
-    const actorData = this.actor.toObject(false);
+    const actorData = context.data;
 
     // Add the actor's data to context.data for easier access, as well as flags.
     context.system = actorData.system;
@@ -141,7 +141,7 @@ export class BoilerplateActorSheet extends ActorSheet {
     super.activateListeners(html);
 
     // Render the item sheet for viewing/editing prior to the editable check.
-    html.find('.item-edit').click((ev) => {
+    html.on('click', '.item-edit', (ev) => {
       const li = $(ev.currentTarget).parents('.item');
       const item = this.actor.items.get(li.data('itemId'));
       item.sheet.render(true);
@@ -152,10 +152,10 @@ export class BoilerplateActorSheet extends ActorSheet {
     if (!this.isEditable) return;
 
     // Add Inventory Item
-    html.find('.item-create').click(this._onItemCreate.bind(this));
+    html.on('click', '.item-create', this._onItemCreate.bind(this));
 
     // Delete Inventory Item
-    html.find('.item-delete').click((ev) => {
+    html.on('click', '.item-delete', (ev) => {
       const li = $(ev.currentTarget).parents('.item');
       const item = this.actor.items.get(li.data('itemId'));
       item.delete();
@@ -163,7 +163,7 @@ export class BoilerplateActorSheet extends ActorSheet {
     });
 
     // Active Effect management
-    html.find('.effect-control').click((ev) => {
+    html.on('click', '.effect-control', (ev) => {
       const row = ev.currentTarget.closest('li');
       const document =
         row.dataset.parentId === this.actor.id
@@ -173,7 +173,7 @@ export class BoilerplateActorSheet extends ActorSheet {
     });
 
     // Rollable abilities.
-    html.find('.rollable').click(this._onRoll.bind(this));
+    html.on('click', '.rollable', this._onRoll.bind(this));
 
     // Drag events for macros.
     if (this.actor.isOwner) {
