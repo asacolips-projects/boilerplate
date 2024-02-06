@@ -3,7 +3,6 @@
  * @extends {Actor}
  */
 export class BoilerplateActor extends Actor {
-
   /** @override */
   prepareData() {
     // Prepare data for the actor. Calling the super version of this executes
@@ -21,7 +20,7 @@ export class BoilerplateActor extends Actor {
 
   /**
    * @override
-   * Augment the basic actor data with additional dynamic data. Typically,
+   * Augment the actor source data with additional dynamic data. Typically,
    * you'll want to handle most of your calculated/derived data in this step.
    * Data calculated in this step should generally not exist in template.json
    * (such as ability modifiers rather than ability scores) and should be
@@ -63,14 +62,15 @@ export class BoilerplateActor extends Actor {
 
     // Make modifications to data here. For example:
     const systemData = actorData.system;
-    systemData.xp = (systemData.cr * systemData.cr) * 100;
+    systemData.xp = systemData.cr * systemData.cr * 100;
   }
 
   /**
    * Override getRollData() that's supplied to rolls.
    */
   getRollData() {
-    const data = super.getRollData();
+    // Starts off by populating the roll data with `this.system`
+    const data = { ...super.getRollData() };
 
     // Prepare character roll data.
     this._getCharacterRollData(data);
@@ -107,5 +107,4 @@ export class BoilerplateActor extends Actor {
 
     // Process additional NPC data here.
   }
-
 }

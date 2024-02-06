@@ -1,6 +1,6 @@
 <ol class="items-list effects-list">
   {{#each effects as |section sid|}}
-    <li class="items-header flexrow" data-effect-type="{{section.type}}">
+    <li class="items-header flexrow" data-effect-type="{{section.type}}" data-parent-id="{{@root.actor.id}}" >
       <h3 class="item-name effect-name flexrow">{{localize section.label}}</h3>
       <div class="effect-source">{{localize "BOILERPLATE.Effect.Source"}}</div>
       <div class="effect-source">{{localize "EFFECT.TabDuration"}}</div>

@@ -10,7 +10,7 @@ import {
 export class BoilerplateItemSheet extends ItemSheet {
   /** @override */
   static get defaultOptions() {
-    return mergeObject(super.defaultOptions, {
+    return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ['boilerplate', 'sheet', 'item'],
       width: 520,
       height: 480,
@@ -43,16 +43,12 @@ export class BoilerplateItemSheet extends ItemSheet {
     const context = super.getData();
 
     // Use a safe clone of the item data for further operations.
-    const itemData = context.item;
+    const itemData = context.data;
 
     // Retrieve the roll data for TinyMCE editors.
-    context.rollData = {};
-    let actor = this.object?.parent ?? null;
-    if (actor) {
-      context.rollData = actor.getRollData();
-    }
+    context.rollData = this.item.getRollData();
 
-    // Add the actor's data to context.data for easier access, as well as flags.
+    // Add the item's data to context.data for easier access, as well as flags.
     context.system = itemData.system;
     context.flags = itemData.flags;
 
@@ -74,8 +70,8 @@ export class BoilerplateItemSheet extends ItemSheet {
     // Roll handlers, click handlers, etc. would go here.
 
     // Active Effect management
-    html
-      .find('.effect-control')
-      .click((ev) => onManageActiveEffect(ev, this.item));
+    html.on('click', '.effect-control', (ev) =>
+      onManageActiveEffect(ev, this.item)
+    );
   }
 }
