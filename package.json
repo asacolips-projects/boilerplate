@@ -3,22 +3,16 @@
   "version": "1.0.0",
   "description": "CSS compiler for the Boilerplate system",
   "scripts": {
-    "build": "gulp build",
-    "compile": "gulp css",
-    "watch": "gulp",
-    "gulp": "gulp"
+    "build": "sass src/scss/boilerplate.scss css/boilerplate.css --style=expanded --no-source-map",
+    "watch": "sass src/scss/boilerplate.scss css/boilerplate.css --style=expanded --source-map --watch"
   },
   "browserslist": [
     "last 3 versions"
   ],
-  "author": "John Doe",
+  "author": "Asacolips",
   "license": "MIT",
   "private": true,
   "devDependencies": {
-    "gulp": "^4.0.2",
-    "gulp-autoprefixer": "^8.0.0",
-    "gulp-sass": "^5.1.0",
-    "gulp-sourcemaps": "^3.0.0",
     "sass": "^1.53.0"
   }
 }
