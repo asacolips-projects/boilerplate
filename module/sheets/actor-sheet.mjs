@@ -12,7 +12,6 @@ export class BoilerplateActorSheet extends ActorSheet {
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ['boilerplate', 'sheet', 'actor'],
-      template: 'systems/boilerplate/templates/actor/actor-sheet.hbs',
       width: 600,
       height: 600,
       tabs: [
@@ -111,7 +110,7 @@ export class BoilerplateActorSheet extends ActorSheet {
 
     // Iterate through items, allocating to containers
     for (let i of context.items) {
-      i.img = i.img || DEFAULT_TOKEN;
+      i.img = i.img || Item.DEFAULT_ICON;
       // Append to gear.
       if (i.type === 'item') {
         gear.push(i);
