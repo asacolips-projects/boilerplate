@@ -6,15 +6,35 @@ This system is a boilerplate system that you can use as a starting point for bui
 
 ## Usage
 
+There are two ways to get started: using the Boilerplate system generator command or manually renaming and updating files.
+
+Regardless of which method you choose, think carefully about your system's name. Your system's package name when submitted to Foundry must be formatted like `alphanumeric-lowercase`, and it must be unique. Check the Foundry systems package list for conflicts before committing to a name!
+
+### Generator
+
+This system includes a generator CLI in `package.json`. To use it, you must have [node.js](https://nodejs.org) installed, and it's recommended that you install node 20 or later.
+
+Once you have npm installed, you can run the following in your terminal or command prompt:
+
+```bash
+npm run generate
+```
+
+Your terminal should prompt you to name your system. Read the instructions carefully, the letter case and special characters in each question matter for correct system generation.
+
+Once the generator completes, it will output your system to `build/<your-system-name>`, where `<your-system-name>` is the package name you supplied during the prompt.
+
+Copy this directory over to your Foundry systems directory and start coding!
+
+### Manual Replacement
+
 Before installing this system, you should rename any files that have `boilerplate` in their filename to use whatever machine-safe name your system needs, such as `adnd2e` if you were building a system for 2nd edition Advanced Dungeons & Dragons. In addition, you should search through the files for `boilerplate` and `Boilerplate` and do the same for those, replacing them with appropriate names for your system.
 
-A system's ID _must_ match its containing folder, and once you've published your system it cannot be changed. It also must be unique within the foundry ecosystem. Choose wisely!
-
-### System Generator
-
-This project is also available as generator that can be run with npm: https://www.npmjs.com/package/generator-foundry
+The `name` property in your `system.json` file is your system's package name. This need to be formatted `alphanumeric-lowercase`, and it must also match the foldername you use for your system.
 
 ### Vue 3 Boilerplate
+
+**NOTE: The Vue 3 version is currently outdated and considered an advanced usage of Foundry due to it being a custom renderer. Only try it out if you _really_ like Vue and are feeling dangerous!**
 
 Alternatively, there's another build of this system that supports using Vue 3 components (ES module build target) for character sheet templates.
 
@@ -30,7 +50,7 @@ For more static references, the [Knowledge Base](https://foundryvtt.com/kb/) and
 
 For much more information on how to use this system as a starting point for making your own, see the [full tutorial on the Foundry Wiki](https://foundryvtt.wiki/en/development/guides/SD-tutorial)!
 
-Note: Tutorial may be out of date
+Note: Tutorial may be out of date, so look out for the Foundry compatibility badge at the top of each page.
 
 ## Sheet Layout
 
@@ -48,6 +68,6 @@ This system includes a handful of helper CSS classes to help you lay out your sh
 
 ## Compiling the CSS
 
-This repo includes both CSS for the theme and SCSS source files. If you're new to CSS, it's probably easier to just work in those files directly and delete the SCSS directory. If you're interested in using a CSS preprocessor to add support for nesting, variables, and more, you can run `npm install` in this directory to install the dependencies for the scss compiler. After that, just run `npm run gulp` to compile the SCSS and start a process that watches for new changes.
+This repo includes both CSS for the theme and SCSS source files. If you're new to CSS, it's probably easier to just work in those files directly and delete the SCSS directory. If you're interested in using a CSS preprocessor to add support for nesting, variables, and more, you can run `npm install` in this directory to install the dependencies for the scss compiler. After that, just run `npm run build` to compile the SCSS and start a process that watches for new changes.
 
 ![image](http://mattsmith.in/images/boilerplate.png)
