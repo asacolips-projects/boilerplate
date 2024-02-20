@@ -196,25 +196,25 @@ inquirer
       type: 'input',
       name: 'packageName',
       message: 'Enter the package name of your system, such as "my-system" (alphanumeric characters and hyphens only):',
-      default: 'my-system-3'
+      default: 'my-system'
     },
     {
       type: 'input',
       name: 'titleName',
       message: 'Enter the formatted name of your system, such as "My System":',
-      default: 'My System 3'
+      default: 'My System'
     },
     {
       type: 'input',
       name: 'className',
       message: 'Enter the name of your system for usage in JS classes, such as "MySystem" (alphanumeric characters only):',
-      default: 'MySystem3'
+      default: 'MySystem'
     },
     {
       type: 'input',
       name: 'constantName',
       message: 'Enter the name of your system for usage in constants, such as "MY_SYSTEM" (alphanumeric characters and underscores only):',
-      default: 'MY_SYSTEM_3'
+      default: 'MY_SYSTEM'
     }
   ])
   // Handle answers.
