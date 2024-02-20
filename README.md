@@ -17,6 +17,7 @@ This system includes a generator CLI in `package.json`. To use it, you must have
 Once you have npm installed, you can run the following in your terminal or command prompt:
 
 ```bash
+npm install
 npm run generate
 ```
 
