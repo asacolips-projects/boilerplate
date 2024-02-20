@@ -10,3 +10,6 @@ npm-debug.log
 *.lock
 jsconfig.json
 foundry
+
+# Boilerplate
+build/
