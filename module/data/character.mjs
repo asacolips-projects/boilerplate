@@ -12,38 +12,15 @@ export default class BoilerplateCharacter extends BoilerplateActorType {
                 value: new fields.NumberField({ ...requiredInteger, initial: 1 })
             }),
         });
-        schema.abilities = new fields.SchemaField({
-            str: new fields.SchemaField({
-                value: new fields.NumberField({ ...requiredInteger, initial: 10 }),
-                mod: new fields.NumberField({ ...requiredInteger, initial: 0 }),
-                label: new fields.StringField({ initial: "" })
-            }),
-            dex: new fields.SchemaField({
-                value: new fields.NumberField({ ...requiredInteger, initial: 10 }),
-                mod: new fields.NumberField({ ...requiredInteger, initial: 0 }),
-                label: new fields.StringField({ initial: "" })
-            }),
-            con: new fields.SchemaField({
-                value: new fields.NumberField({ ...requiredInteger, initial: 10 }),
-                mod: new fields.NumberField({ ...requiredInteger, initial: 0 }),
-                label: new fields.StringField({ initial: "" })
-            }),
-            int: new fields.SchemaField({
-                value: new fields.NumberField({ ...requiredInteger, initial: 10 }),
-                mod: new fields.NumberField({ ...requiredInteger, initial: 0 }),
-                label: new fields.StringField({ initial: "" })
-            }),
-            wis: new fields.SchemaField({
-                value: new fields.NumberField({ ...requiredInteger, initial: 10 }),
-                mod: new fields.NumberField({ ...requiredInteger, initial: 0 }),
-                label: new fields.StringField({ initial: "" })
-            }),
-            cha: new fields.SchemaField({
-                value: new fields.NumberField({ ...requiredInteger, initial: 10 }),
-                mod: new fields.NumberField({ ...requiredInteger, initial: 0 }),
-                label: new fields.StringField({ initial: "" })
-            }),
-        });
+
+        schema.abilities = new fields.SchemaField(Object.keys(CONFIG.BOILERPLATE.abilities).reduce((obj, ability) => {
+            obj[ability] = new fields.SchemaField({
+              value: new fields.NumberField({...requiredInteger, initial: 10, min: 0}),
+              mod: new fields.NumberField({...requiredInteger, initial: 0, min: 0}),
+              label: new fields.StringField({initial: ""})
+            });
+            return obj;
+          }, {}));
 
         return schema;
     }
