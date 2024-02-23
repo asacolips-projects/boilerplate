@@ -1,4 +1,4 @@
-export default class BoilerplateActorType extends foundry.abstract.TypeDataModel {
+export default class BoilerplateActorBase extends foundry.abstract.TypeDataModel {
 
     static defineSchema() {
         const fields = foundry.data.fields;
@@ -16,13 +16,5 @@ export default class BoilerplateActorType extends foundry.abstract.TypeDataModel
         schema.biography = new fields.StringField({ initial: "" });
 
         return schema;
-    }
-
-    prepareBaseData() {
-
-    }
-
-    prepareDerivedData() {
-        
     }
 }

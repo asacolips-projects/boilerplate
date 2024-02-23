@@ -36,7 +36,7 @@ Hooks.once('init', function () {
   };
 
   // Define custom DataModel classes
-  CONFIG.Actor.dataModels.actor = DataModels.BoilerplateActorType;
+  CONFIG.Actor.dataModels.actor = DataModels.BoilerplateActorBase;
   CONFIG.Actor.dataModels.character = DataModels.BoilerplateCharacter;
 
   // Define custom Document classes
