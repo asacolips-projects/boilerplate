@@ -7,6 +7,8 @@ import { BoilerplateItemSheet } from './sheets/item-sheet.mjs';
 // Import helper/utility classes and constants.
 import { preloadHandlebarsTemplates } from './helpers/templates.mjs';
 import { BOILERPLATE } from './helpers/config.mjs';
+// Import DataModel classes
+import * as DataModels from './data/_module.mjs';
 
 /* -------------------------------------------- */
 /*  Init Hook                                   */
@@ -32,6 +34,10 @@ Hooks.once('init', function () {
     formula: '1d20 + @abilities.dex.mod',
     decimals: 2,
   };
+
+  // Define custom DataModel classes
+  CONFIG.Actor.dataModels.actor = DataModels.BoilerplateActorType;
+  CONFIG.Actor.dataModels.character = DataModels.BoilerplateCharacter;
 
   // Define custom Document classes
   CONFIG.Actor.documentClass = BoilerplateActor;
