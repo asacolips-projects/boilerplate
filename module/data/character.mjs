@@ -1,4 +1,4 @@
-import BoilerplateActorBase from "./actor-type.mjs";
+import BoilerplateActorBase from "./actor-base.mjs";
 
 export default class BoilerplateCharacter extends BoilerplateActorBase {
 
@@ -16,12 +16,12 @@ export default class BoilerplateCharacter extends BoilerplateActorBase {
         // Iterate over ability names and create a new SchemaField for each.
         schema.abilities = new fields.SchemaField(Object.keys(CONFIG.BOILERPLATE.abilities).reduce((obj, ability) => {
             obj[ability] = new fields.SchemaField({
-              value: new fields.NumberField({...requiredInteger, initial: 10, min: 0}),
-              mod: new fields.NumberField({...requiredInteger, initial: 0, min: 0}),
-              label: new fields.StringField({initial: ""})
+                value: new fields.NumberField({ ...requiredInteger, initial: 10, min: 0 }),
+                mod: new fields.NumberField({ ...requiredInteger, initial: 0, min: 0 }),
+                label: new fields.StringField({ required: true, blank: true })
             });
             return obj;
-          }, {}));
+        }, {}));
 
         return schema;
     }
@@ -34,5 +34,21 @@ export default class BoilerplateCharacter extends BoilerplateActorBase {
             // Handle ability label localization.
             this.abilities[key].label = game.i18n.localize(CONFIG.BOILERPLATE.abilities[key]) ?? key;
         }
+    }
+
+    getRollData() {
+        const data = {};
+
+        // Copy the ability scores to the top level, so that rolls can use
+        // formulas like `@str.mod + 4`.
+        if (this.abilities) {
+            for (let [k,v] of Object.entries(this.abilities)) {
+                data[k] = foundry.utils.deepClone(v);
+            }
+        }
+
+        data.lvl = this.attributes.level.value;
+
+        return data
     }
 }

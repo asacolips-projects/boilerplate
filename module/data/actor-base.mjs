@@ -13,7 +13,7 @@ export default class BoilerplateActorBase extends foundry.abstract.TypeDataModel
             value: new fields.NumberField({ ...requiredInteger, initial: 5, min: 0 }),
             max: new fields.NumberField({ ...requiredInteger, initial: 5 })
         });
-        schema.biography = new fields.StringField({ initial: "" });
+        schema.biography = new fields.StringField({ required: true, blank: true }); // equivalent to passing ({initial: ""}) for StringFields
 
         return schema;
     }
