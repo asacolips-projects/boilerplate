@@ -1,6 +1,6 @@
 {
   "name": "boilerplate",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "CSS compiler for the Boilerplate system",
   "scripts": {
     "build": "sass src/scss/boilerplate.scss css/boilerplate.css --style=expanded --no-source-map",
