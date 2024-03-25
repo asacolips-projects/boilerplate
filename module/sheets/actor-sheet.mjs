@@ -79,9 +79,9 @@ export class BoilerplateActorSheet extends ActorSheet {
    */
   _prepareCharacterData(context) {
     // Handle ability scores.
-    for (let [k, v] of Object.entries(context.system.abilities)) {
-      v.label = game.i18n.localize(CONFIG.BOILERPLATE.abilities[k]) ?? k;
-    }
+    // for (let [k, v] of Object.entries(context.system.abilities)) {
+    //   v.label = game.i18n.localize(CONFIG.BOILERPLATE.abilities[k]) ?? k;
+    // }
   }
 
   /**
@@ -234,7 +234,7 @@ export class BoilerplateActorSheet extends ActorSheet {
     // Handle rolls that supply the formula directly.
     if (dataset.roll) {
       let label = dataset.label ? `[ability] ${dataset.label}` : '';
-      let roll = new Roll(dataset.roll, this.actor.getRollData());
+      let roll = new Roll(dataset.roll, this.actor.system.getRollData());
       roll.toMessage({
         speaker: ChatMessage.getSpeaker({ actor: this.actor }),
         flavor: label,
