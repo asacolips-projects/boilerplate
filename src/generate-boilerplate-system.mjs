@@ -1,6 +1,6 @@
 import inquirer from 'inquirer';
 import replace from 'replace';
-import { glob } from 'glob';
+import { glob, globSync } from 'glob';
 import fs from 'fs';
 import path from 'path';
 
@@ -20,6 +20,7 @@ class SystemGenerator {
     this.titleName = answers.titleName.trim();
     this.className = answers.className.trim();
     this.constantName = answers.constantName.trim();
+    this.dataModel = answers.dataModel ?? false;
     // Transform answers.
     this.packageName = this.transformPackageName();
     this.className = this.transformClassName();
@@ -82,6 +83,19 @@ class SystemGenerator {
         if (err) throw err;
       });
     });
+
+    // Handle data model conversion.
+    if (this.dataModel) {
+      const dataModelFiles = globSync('src/datamodels/*');
+      dataModelFiles.forEach(source => {
+        fs.cpSync(source, `build/${this.packageName}/${source.replace('src/datamodels/', '')}`, {recursive: true, force: true}, (err) => {
+          if (err) throw err;
+        });
+      });
+    }
+
+    // Remove data model source.
+    fs.rmSync(`build/${this.packageName}/src/datamodels`, {recursive: true, force: true});
   }
 
   /**
@@ -215,12 +229,19 @@ inquirer
       name: 'constantName',
       message: 'Enter the name of your system for usage in constants, such as "MY_SYSTEM" (alphanumeric characters and underscores only):',
       default: 'MY_SYSTEM'
+    },
+    {
+      type: 'confirm',
+      name: 'dataModel',
+      message: 'Use DataModel instead of template.json?',
+      default: false
     }
   ])
   // Handle answers.
   .then((answers) => {
     // Validate for empty values.
     for (let [question, answer] of Object.entries(answers)) {
+      if (question === 'dataModel') continue;
       if (!answer || !answer.length || answer.trim().length < 1) {
         throw new Error(`${question} cannot be empty.`);
       }
@@ -233,7 +254,7 @@ inquirer
     generator.cleanBuildDir();
 
     // Glob Boilerplate's files so that we can process them.
-    glob('*', {ignore: 'node_modules/**' }).then(files => {
+    glob('*', {ignore: ['node_modules/**'] }).then(files => {
       // Copy all files into the build dir.
       generator.copyFiles(files);
       // Replace boilerplate name mentions in files.
