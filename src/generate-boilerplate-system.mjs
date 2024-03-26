@@ -88,7 +88,8 @@ class SystemGenerator {
     if (this.dataModel) {
       const dataModelFiles = globSync('src/datamodels/*');
       dataModelFiles.forEach(source => {
-        fs.cpSync(source, `build/${this.packageName}/${source.replace('src/datamodels/', '')}`, {recursive: true, force: true}, (err) => {
+        const dest = source.replaceAll('\\', '/').replace('src/datamodels/', '');
+        fs.cpSync(source, `build/${this.packageName}/${dest}`, {recursive: true, force: true}, (err) => {
           if (err) throw err;
         });
       });
