@@ -43,8 +43,8 @@ export class BoilerplateActorSheet extends ActorSheet {
     const actorData = context.data;
 
     // Add the actor's data to context.data for easier access, as well as flags.
-    context.system = actorData.system;
-    context.flags = actorData.flags;
+    context.system = this.document.system;
+    context.flags = this.document.flags;
 
     // Prepare character data and items.
     if (actorData.type == 'character') {

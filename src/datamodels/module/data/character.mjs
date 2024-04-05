@@ -17,8 +17,6 @@ export default class BoilerplateCharacter extends BoilerplateActorBase {
     schema.abilities = new fields.SchemaField(Object.keys(CONFIG.BOILERPLATE.abilities).reduce((obj, ability) => {
       obj[ability] = new fields.SchemaField({
         value: new fields.NumberField({ ...requiredInteger, initial: 10, min: 0 }),
-        mod: new fields.NumberField({ ...requiredInteger, initial: 0, min: 0 }),
-        label: new fields.StringField({ required: true, blank: true })
       });
       return obj;
     }, {}));
