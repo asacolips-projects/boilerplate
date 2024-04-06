@@ -40,11 +40,11 @@ export class BoilerplateActorSheet extends ActorSheet {
     const context = super.getData();
 
     // Use a safe clone of the actor data for further operations.
-    const actorData = context.data;
+    const actorData = this.document.toObject(false);
 
     // Add the actor's data to context.data for easier access, as well as flags.
-    context.system = this.document.system;
-    context.flags = this.document.flags;
+    context.system = actorData.system;
+    context.flags = actorData.flags;
 
     // Prepare character data and items.
     if (actorData.type == 'character') {

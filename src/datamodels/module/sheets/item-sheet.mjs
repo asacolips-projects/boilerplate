@@ -43,15 +43,14 @@ export class BoilerplateItemSheet extends ItemSheet {
     const context = super.getData();
 
     // Use a safe clone of the item data for further operations.
-    const itemData = context.data;
-    
+    const itemData = this.document.toPlainObject();
+
     // Retrieve the roll data for TinyMCE editors.
     context.rollData = this.item.getRollData();
-    
+
     // Add the item's data to context.data for easier access, as well as flags.
-    const plainDocument = this.document.toPlainObject();
-    context.system = plainDocument.system;
-    context.flags = plainDocument.flags;
+    context.system = itemData.system;
+    context.flags = itemData.flags;
 
     // Prepare active effects for easier access
     context.effects = prepareActiveEffectCategories(this.item.effects);
