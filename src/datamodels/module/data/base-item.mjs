@@ -1,4 +1,6 @@
-export default class BoilerplateItemBase extends foundry.abstract.TypeDataModel {
+import BoilerplateDataModel from "./base-model.mjs";
+
+export default class BoilerplateItemBase extends BoilerplateDataModel {
 
   static defineSchema() {
     const fields = foundry.data.fields;
@@ -8,4 +10,5 @@ export default class BoilerplateItemBase extends foundry.abstract.TypeDataModel 
 
     return schema;
   }
+
 }
