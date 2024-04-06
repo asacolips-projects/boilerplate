@@ -41,9 +41,9 @@ export class BoilerplateActorSheet extends ActorSheet {
 
     // Use a safe clone of the actor data for further operations.
     const actorData = context.data;
-    const plainDocument = this.document.toPlainObject();
-
+    
     // Add the actor's data to context.data for easier access, as well as flags.
+    const plainDocument = this.document.toPlainObject();
     context.system = plainDocument.system;
     context.flags = plainDocument.flags;
 
