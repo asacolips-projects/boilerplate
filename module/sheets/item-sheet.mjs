@@ -3,47 +3,74 @@ import {
   prepareActiveEffectCategories,
 } from '../helpers/effects.mjs';
 
+const { api, sheets } = foundry.applications.sheets;
+
 /**
  * Extend the basic ItemSheet with some very simple modifications
  * @extends {ItemSheet}
  */
-export class BoilerplateItemSheet extends ItemSheet {
+export class BoilerplateItemSheet extends api.HandlebarsApplicationMixin(
+  sheets.ItemSheetV2
+) {
   /** @override */
-  static get defaultOptions() {
-    return foundry.utils.mergeObject(super.defaultOptions, {
-      classes: ['boilerplate', 'sheet', 'item'],
-      width: 520,
-      height: 480,
-      tabs: [
-        {
-          navSelector: '.sheet-tabs',
-          contentSelector: '.sheet-body',
-          initial: 'description',
-        },
-      ],
-    });
-  }
+  static DEFAULT_OPTIONS = {
+    classes: ['boilerplate', 'item'],
+    actions: {
+      effectControl: onManageActiveEffect,
+    },
+  };
+
+  /* -------------------------------------------- */
 
   /** @override */
-  get template() {
-    const path = 'systems/boilerplate/templates/item';
-    // Return a single sheet for all item types.
-    // return `${path}/item-sheet.hbs`;
+  static PARTS = {
+    header: {
+      template: 'systems/boilerplate/templates/item-header.hbs',
+    },
+    description: {
+      template: 'systems/boilerplate/templates/item/item-description.hbs',
+    },
+    attributes: {
+      template: 'systems/boilerplate/templates/item/item-attributes.hbs',
+    },
+    effects: {
+      template: 'systems/boilerplate/templates/item/item-effects.hbs',
+    },
+  };
 
-    // Alternatively, you could use the following return statement to do a
-    // unique item sheet by type, like `weapon-sheet.hbs`.
-    return `${path}/item-${this.item.type}-sheet.hbs`;
+  /** @override */
+  _configureRenderOptions(options) {
+    super._configureRenderOptions(options);
+    // Not all parts always render
+    options.parts = ['header', 'description'];
+    // Don't show the other tabs if only limited view
+    if (this.document.limited) return;
+    // Control which parts show based on document subtype
+    switch (this.document.type) {
+      case 'feature':
+        options.parts.push('attributes', 'effects');
+        break;
+      case 'gear':
+        options.parts.push('attributes');
+        break;
+      case 'spell':
+        options.parts.push('attributes');
+        break;
+    }
   }
 
   /* -------------------------------------------- */
 
   /** @override */
-  async getData() {
-    // Retrieve base data structure.
-    const context = super.getData();
-
-    // Use a safe clone of the item data for further operations.
-    const itemData = this.document.toObject(false);
+  async _prepareContext(_options) {
+    const context = {
+      item: this.item,
+      // Adding system and flags for easier access
+      system: this.item.system,
+      flags: this.item.flags,
+      // Adding a pointer to CONFIG.BOILERPLATE
+      config: CONFIG.BOILERPLATE,
+    };
 
     // Enrich description info for display
     // Enrichment turns text like `[[/r 1d20]]` into buttons
@@ -61,33 +88,9 @@ export class BoilerplateItemSheet extends ItemSheet {
       }
     );
 
-    // Add the item's data to context.data for easier access, as well as flags.
-    context.system = itemData.system;
-    context.flags = itemData.flags;
-
-    // Adding a pointer to CONFIG.BOILERPLATE
-    context.config = CONFIG.BOILERPLATE;
-
     // Prepare active effects for easier access
     context.effects = prepareActiveEffectCategories(this.item.effects);
 
     return context;
-  }
-
-  /* -------------------------------------------- */
-
-  /** @override */
-  activateListeners(html) {
-    super.activateListeners(html);
-
-    // Everything below here is only needed if the sheet is editable
-    if (!this.isEditable) return;
-
-    // Roll handlers, click handlers, etc. would go here.
-
-    // Active Effect management
-    html.on('click', '.effect-control', (ev) =>
-      onManageActiveEffect(ev, this.item)
-    );
   }
 }
