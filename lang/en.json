@@ -13,6 +13,11 @@
       "Item": "Boilerplate Item Sheet"
     },
     "Item": {
+      "Tabs": {
+        "Attributes": "Attributes",
+        "Description": "Description",
+        "Effects": "Effects"
+      },
       "Spell": {
         "SpellLVL": "Level {level} Spells",
         "AddLVL": "Add LVL {level}"
@@ -33,7 +38,7 @@
       "npc": "NPC"
     },
     "Item": {
-      "item": "Item",
+      "gear": "Gear",
       "feature": "Feature",
       "spell": "Spell"
     }

@@ -1,0 +1,42 @@
+{{! Attributes Tab }}
+<section
+  class='tab attributes {{tab.cssClass}}'
+  data-group='primary'
+  data-tab='attributes'
+>
+  {{! As you add new fields, add them in here! }}
+  <div class='resource'>
+    <label class='resource-label'>Roll Formula:</label>
+    <span>{{system.formula}}</span>
+    <div class='grid grid-4col'>
+      <div class='grid-span-1'>
+        <label class='resource-label'>Number of Dice</label>
+        <input
+          type='text'
+          name='system.roll.diceNum'
+          value='{{system.roll.diceNum}}'
+          data-dtype='Number'
+        />
+      </div>
+      <div class='grid-span-1'>
+        <label class='resource-label'>Die Size</label>
+        <input
+          type='text'
+          name='system.roll.diceSize'
+          value='{{system.roll.diceSize}}'
+          data-dtype='String'
+        />
+      </div>
+      <div class='grid-span-2'>
+        <label class='resource-label'>Roll Modifier</label>
+        <input
+          type='text'
+          name='system.roll.diceBonus'
+          value='{{system.roll.diceBonus}}'
+          data-dtype='String'
+        />
+      </div>
+    </div>
+
+  </div>
+</section>

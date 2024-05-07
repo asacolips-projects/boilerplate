@@ -50,13 +50,13 @@
     }
   },
   "Item": {
-    "types": ["item", "feature", "spell"],
+    "types": ["gear", "feature", "spell"],
     "templates": {
       "base": {
         "description": ""
       }
     },
-    "item": {
+    "gear": {
       "templates": ["base"],
       "quantity": 1,
       "weight": 0,

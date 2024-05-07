@@ -1,16 +1,17 @@
 /**
  * Manage Active Effect instances through an Actor or Item Sheet via effect control buttons.
- * @param {MouseEvent} event      The left-click event on the effect control
- * @param {Actor|Item} owner      The owning document which manages this effect
+ * @param {PointerEvent} event      The left-click event on the effect control
+ * @param {HTMLElement} target      The capturing HTML element which defined a [data-action]
+ * @remarks `this` is bound to
  */
-export function onManageActiveEffect(event, owner) {
+export function onManageActiveEffect(event, target) {
+  const owner = this.document;
   event.preventDefault();
-  const a = event.currentTarget;
-  const li = a.closest('li');
+  const li = target.closest('li');
   const effect = li.dataset.effectId
     ? owner.effects.get(li.dataset.effectId)
     : null;
-  switch (a.dataset.action) {
+  switch (target.dataset.actionMode) {
     case 'create':
       return owner.createEmbeddedDocuments('ActiveEffect', [
         {
