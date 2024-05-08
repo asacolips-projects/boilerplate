@@ -53,7 +53,7 @@ export class BoilerplateItemSheet extends api.HandlebarsApplicationMixin(
   _configureRenderOptions(options) {
     super._configureRenderOptions(options);
     // Not all parts always render
-    options.parts = ['header', 'description', 'tabs'];
+    options.parts = ['header', 'tabs', 'description'];
     // Don't show the other tabs if only limited view
     if (this.document.limited) return;
     // Control which parts show based on document subtype
@@ -106,8 +106,6 @@ export class BoilerplateItemSheet extends api.HandlebarsApplicationMixin(
           {
             // Whether to show secret blocks in the finished html
             secrets: this.document.isOwner,
-            // Necessary in v11, can be removed in v12
-            async: true,
             // Data to fill in for inline rolls
             rollData: this.item.getRollData(),
             // Relative UUID resolution

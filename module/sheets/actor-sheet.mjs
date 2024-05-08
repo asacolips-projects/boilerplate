@@ -3,97 +3,184 @@ import {
   prepareActiveEffectCategories,
 } from '../helpers/effects.mjs';
 
+const { api, sheets } = foundry.applications;
+
 /**
  * Extend the basic ActorSheet with some very simple modifications
  * @extends {ActorSheet}
  */
-export class BoilerplateActorSheet extends ActorSheet {
+export class BoilerplateActorSheet extends api.HandlebarsApplicationMixin(
+  sheets.ActorSheetV2
+) {
   /** @override */
-  static get defaultOptions() {
-    return foundry.utils.mergeObject(super.defaultOptions, {
-      classes: ['boilerplate', 'sheet', 'actor'],
+  static DEFAULT_OPTIONS = {
+    classes: ['boilerplate', 'actor'],
+    position: {
       width: 600,
       height: 600,
-      tabs: [
-        {
-          navSelector: '.sheet-tabs',
-          contentSelector: '.sheet-body',
-          initial: 'features',
-        },
-      ],
-    });
-  }
+    },
+    actions: {
+      viewItem: this._viewItem,
+      createItem: this._createItem,
+      deleteItem: this._deleteItem,
+      manageEffect: onManageActiveEffect,
+      roll: this._onRoll,
+    },
+  };
 
   /** @override */
-  get template() {
-    return `systems/boilerplate/templates/actor/actor-${this.actor.type}-sheet.hbs`;
+  static PARTS = {
+    header: {
+      template: 'systems/boilerplate/templates/actor/header.hbs',
+    },
+    tabs: {
+      // Foundry-provided generic template
+      template: 'templates/generic/tab-navigation.hbs',
+    },
+    features: {
+      template: 'systems/boilerplate/templates/actor/features.hbs',
+    },
+    biography: {
+      template: 'systems/boilerplate/templates/actor/biography.hbs',
+    },
+    gear: {
+      template: 'systems/boilerplate/templates/actor/gear.hbs',
+    },
+    spells: {
+      template: 'systems/boilerplate/templates/actor/spells.hbs',
+    },
+    effects: {
+      template: 'systems/boilerplate/templates/actor/effects.hbs',
+    },
+  };
+
+  /** @override */
+  _configureRenderOptions(options) {
+    super._configureRenderOptions(options);
+    // Not all parts always render
+    options.parts = ['header', 'tabs', 'biography'];
+    // Don't show the other tabs if only limited view
+    if (this.document.limited) return;
+    // Control which parts show based on document subtype
+    switch (this.document.type) {
+      case 'character':
+        options.parts.push('features', 'gear', 'spells', 'effects');
+        break;
+      case 'npc':
+        options.parts.push('gear', 'effects');
+        break;
+    }
   }
 
   /* -------------------------------------------- */
 
   /** @override */
-  async getData() {
-    // Retrieve the data structure from the base sheet. You can inspect or log
-    // the context variable to see the structure, but some key properties for
-    // sheets are the actor object, the data object, whether or not it's
-    // editable, the items array, and the effects array.
-    const context = super.getData();
+  async _prepareContext(options) {
+    // Output initialization
+    const context = {
+      // Validates both permissions and compendium status
+      editable: this.isEditable,
+      actor: this.actor,
+      // Add the actor's data to context.data for easier access, as well as flags.
+      system: this.actor.system,
+      flags: this.actor.flags,
+      // Adding a pointer to CONFIG.BOILERPLATE
+      config: CONFIG.BOILERPLATE,
+      tabs: this._getTabs(options.parts),
+    };
 
-    // Use a safe clone of the actor data for further operations.
-    const actorData = this.document.toObject(false);
-
-    // Add the actor's data to context.data for easier access, as well as flags.
-    context.system = actorData.system;
-    context.flags = actorData.flags;
-
-    // Adding a pointer to CONFIG.BOILERPLATE
-    context.config = CONFIG.BOILERPLATE;
-
-    // Prepare character data and items.
-    if (actorData.type == 'character') {
-      this._prepareItems(context);
-      this._prepareCharacterData(context);
-    }
-
-    // Prepare NPC data and items.
-    if (actorData.type == 'npc') {
-      this._prepareItems(context);
-    }
-
-    // Enrich biography info for display
-    // Enrichment turns text like `[[/r 1d20]]` into buttons
-    context.enrichedBiography = await TextEditor.enrichHTML(
-      this.actor.system.biography,
-      {
-        // Whether to show secret blocks in the finished html
-        secrets: this.document.isOwner,
-        // Necessary in v11, can be removed in v12
-        async: true,
-        // Data to fill in for inline rolls
-        rollData: this.actor.getRollData(),
-        // Relative UUID resolution
-        relativeTo: this.actor,
-      }
-    );
-
-    // Prepare active effects
-    context.effects = prepareActiveEffectCategories(
-      // A generator that returns all effects stored on the actor
-      // as well as any items
-      this.actor.allApplicableEffects()
-    );
+    // Offloading context prep to a helper function
+    this._prepareItems(context);
 
     return context;
   }
 
+  /** @override */
+  async _preparePartContext(partId, context) {
+    switch (partId) {
+      case 'features':
+      case 'spells':
+      case 'gear':
+        context.tab = context.tabs[partId];
+        break;
+      case 'biography':
+        context.tab = context.tabs[partId];
+        // Enrich biography info for display
+        // Enrichment turns text like `[[/r 1d20]]` into buttons
+        context.enrichedBiography = await TextEditor.enrichHTML(
+          this.actor.system.biography,
+          {
+            // Whether to show secret blocks in the finished html
+            secrets: this.document.isOwner,
+            // Data to fill in for inline rolls
+            rollData: this.actor.getRollData(),
+            // Relative UUID resolution
+            relativeTo: this.actor,
+          }
+        );
+        break;
+      case 'effects':
+        context.tab = context.tabs[partId];
+        // Prepare active effects
+        context.effects = prepareActiveEffectCategories(
+          // A generator that returns all effects stored on the actor
+          // as well as any items
+          this.actor.allApplicableEffects()
+        );
+        break;
+    }
+    return context;
+  }
+
   /**
-   * Character-specific context modifications
-   *
-   * @param {object} context The context object to mutate
+   * Generates the data for the generic tab navigation template
+   * @param {string[]} parts An array of named template parts to render
+   * @returns {Record<string, Partial<ApplicationTab>>}
+   * @protected
    */
-  _prepareCharacterData(context) {
-    // This is where you can enrich character-specific editor fields
-    // or setup anything else that's specific to this type
+  _getTabs(parts) {
+    return parts.reduce((tabs, partId) => {
+      // If you have sub-tabs this is necessary to change
+      const tabGroup = 'primary';
+      const tab = {
+        cssClass: '',
+        group: tabGroup,
+        // Matches tab property to
+        id: '',
+        // FontAwesome Icon, if you so choose
+        icon: '',
+        // Run through localization
+        label: 'BOILERPLATE.Actor.Tabs.',
+      };
+      switch (partId) {
+        case 'header':
+        case 'tabs':
+          return tabs;
+        case 'biography':
+          tab.id = 'biography';
+          tab.label += 'Biography';
+          break;
+        case 'features':
+          tab.id = 'features';
+          tab.label += 'Features';
+          break;
+        case 'gear':
+          tab.id = 'gear';
+          tab.label += 'Gear';
+          break;
+        case 'spells':
+          tab.id = 'spells';
+          tab.label += 'Spells';
+          break;
+        case 'effects':
+          tab.id = 'effects';
+          tab.label += 'Effects';
+          break;
+      }
+      if (this.tabGroups[tabGroup] === tab.id) tab.cssClass = 'active';
+      tabs[partId] = tab;
+      return tabs;
+    }, {});
   }
 
   /**
@@ -119,10 +206,9 @@ export class BoilerplateActorSheet extends ActorSheet {
     };
 
     // Iterate through items, allocating to containers
-    for (let i of context.items) {
-      i.img = i.img || Item.DEFAULT_ICON;
+    for (let i of this.document.items) {
       // Append to gear.
-      if (i.type === 'item') {
+      if (i.type === 'gear') {
         gear.push(i);
       }
       // Append to features.
@@ -137,9 +223,13 @@ export class BoilerplateActorSheet extends ActorSheet {
       }
     }
 
-    // Assign and return
-    context.gear = gear;
-    context.features = features;
+    for (const s of Object.values(spells)) {
+      s.sort((a, b) => (a.sort || 0) - (b.sort || 0));
+    }
+
+    // Sort then assign
+    context.gear = gear.sort((a, b) => (a.sort || 0) - (b.sort || 0));
+    context.features = features.sort((a, b) => (a.sort || 0) - (b.sort || 0));
     context.spells = spells;
   }
 
@@ -149,27 +239,9 @@ export class BoilerplateActorSheet extends ActorSheet {
   activateListeners(html) {
     super.activateListeners(html);
 
-    // Render the item sheet for viewing/editing prior to the editable check.
-    html.on('click', '.item-edit', (ev) => {
-      const li = $(ev.currentTarget).parents('.item');
-      const item = this.actor.items.get(li.data('itemId'));
-      item.sheet.render(true);
-    });
-
     // -------------------------------------------------------------
     // Everything below here is only needed if the sheet is editable
     if (!this.isEditable) return;
-
-    // Add Inventory Item
-    html.on('click', '.item-create', this._onItemCreate.bind(this));
-
-    // Delete Inventory Item
-    html.on('click', '.item-delete', (ev) => {
-      const li = $(ev.currentTarget).parents('.item');
-      const item = this.actor.items.get(li.data('itemId'));
-      item.delete();
-      li.slideUp(200, () => this.render(false));
-    });
 
     // Active Effect management
     html.on('click', '.effect-control', (ev) => {
@@ -180,9 +252,6 @@ export class BoilerplateActorSheet extends ActorSheet {
           : this.actor.items.get(row.dataset.parentId);
       onManageActiveEffect(ev, document);
     });
-
-    // Rollable abilities.
-    html.on('click', '.rollable', this._onRoll.bind(this));
 
     // Drag events for macros.
     if (this.actor.isOwner) {
@@ -195,25 +264,55 @@ export class BoilerplateActorSheet extends ActorSheet {
     }
   }
 
+  /**************
+   *
+   *   ACTIONS
+   *
+   **************/
+
+  /**
+   *
+   * @param {PointerEvent} event   The originating click event
+   * @param {HTMLElement} target   The capturing HTML element which defined a [data-action]
+   * @protected
+   */
+  static async _viewItem(event, target) {
+    const li = $(target).parents('.item');
+    const item = this.actor.items.get(li.data('itemId'));
+    item.sheet.render(true);
+  }
+
+  /**
+   *
+   * @param {PointerEvent} event   The originating click event
+   * @param {HTMLElement} target   The capturing HTML element which defined a [data-action]
+   * @protected
+   */
+  static async _deleteItem(event, target) {
+    const li = $(target).parents('.item');
+    const item = this.actor.items.get(li.data('itemId'));
+    item.delete();
+    li.slideUp(200, () => this.render(false));
+  }
+
   /**
    * Handle creating a new Owned Item for the actor using initial data defined in the HTML dataset
-   * @param {Event} event   The originating click event
+   * @param {PointerEvent} event   The originating click event
+   * @param {HTMLElement} target   The capturing HTML element which defined a [data-action]
    * @private
    */
-  async _onItemCreate(event) {
+  static async _createItem(event, target) {
     event.preventDefault();
-    const header = event.currentTarget;
     // Get the type of item to create.
-    const type = header.dataset.type;
-    // Grab any data associated with this control.
-    const data = duplicate(header.dataset);
+    const type = target.dataset.type;
     // Initialize a default name.
     const name = `New ${type.capitalize()}`;
     // Prepare the item object.
     const itemData = {
       name: name,
       type: type,
-      system: data,
+      // Grab any data associated with this control.
+      system: target.dataset,
     };
     // Remove the type from the dataset since it's in the itemData.type prop.
     delete itemData.system['type'];
@@ -224,18 +323,18 @@ export class BoilerplateActorSheet extends ActorSheet {
 
   /**
    * Handle clickable rolls.
-   * @param {Event} event   The originating click event
-   * @private
+   * @param {PointerEvent} event   The originating click event
+   * @param {HTMLElement} target   The capturing HTML element which defined a [data-action]
+   * @protected
    */
-  _onRoll(event) {
+  static async _onRoll(event, target) {
     event.preventDefault();
-    const element = event.currentTarget;
-    const dataset = element.dataset;
+    const dataset = target.dataset;
 
     // Handle item rolls.
     if (dataset.rollType) {
       if (dataset.rollType == 'item') {
-        const itemId = element.closest('.item').dataset.itemId;
+        const itemId = target.closest('.item').dataset.itemId;
         const item = this.actor.items.get(itemId);
         if (item) return item.roll();
       }
@@ -245,7 +344,7 @@ export class BoilerplateActorSheet extends ActorSheet {
     if (dataset.roll) {
       let label = dataset.label ? `[ability] ${dataset.label}` : '';
       let roll = new Roll(dataset.roll, this.actor.getRollData());
-      roll.toMessage({
+      await roll.toMessage({
         speaker: ChatMessage.getSpeaker({ actor: this.actor }),
         flavor: label,
         rollMode: game.settings.get('core', 'rollMode'),

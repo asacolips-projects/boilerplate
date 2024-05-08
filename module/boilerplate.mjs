@@ -5,7 +5,6 @@ import { BoilerplateItem } from './documents/item.mjs';
 import { BoilerplateActorSheet } from './sheets/actor-sheet.mjs';
 import { BoilerplateItemSheet } from './sheets/item-sheet.mjs';
 // Import helper/utility classes and constants.
-import { preloadHandlebarsTemplates } from './helpers/templates.mjs';
 import { BOILERPLATE } from './helpers/config.mjs';
 
 /* -------------------------------------------- */
@@ -53,9 +52,6 @@ Hooks.once('init', function () {
     makeDefault: true,
     label: 'BOILERPLATE.SheetLabels.Item',
   });
-
-  // Preload Handlebars templates.
-  return preloadHandlebarsTemplates();
 });
 
 /* -------------------------------------------- */

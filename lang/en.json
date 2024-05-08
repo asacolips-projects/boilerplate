@@ -12,6 +12,15 @@
       "Actor": "Boilerplate Actor Sheet",
       "Item": "Boilerplate Item Sheet"
     },
+    "Actor": {
+      "Tabs": {
+        "Biography": "Biography",
+        "Features": "Features",
+        "Gear": "Gear",
+        "Spells": "Spells",
+        "Effects": "Effects"
+      }
+    },
     "Item": {
       "Tabs": {
         "Attributes": "Attributes",
