@@ -23,7 +23,7 @@ export class BoilerplateActorSheet extends api.HandlebarsApplicationMixin(
       viewItem: this._viewItem,
       createItem: this._createItem,
       deleteItem: this._deleteItem,
-      manageEffect: onManageActiveEffect,
+      manageEffect: this._manageEffect,
       roll: this._onRoll,
     },
   };
@@ -235,35 +235,6 @@ export class BoilerplateActorSheet extends api.HandlebarsApplicationMixin(
 
   /* -------------------------------------------- */
 
-  /** @override */
-  activateListeners(html) {
-    super.activateListeners(html);
-
-    // -------------------------------------------------------------
-    // Everything below here is only needed if the sheet is editable
-    if (!this.isEditable) return;
-
-    // Active Effect management
-    html.on('click', '.effect-control', (ev) => {
-      const row = ev.currentTarget.closest('li');
-      const document =
-        row.dataset.parentId === this.actor.id
-          ? this.actor
-          : this.actor.items.get(row.dataset.parentId);
-      onManageActiveEffect(ev, document);
-    });
-
-    // Drag events for macros.
-    if (this.actor.isOwner) {
-      let handler = (ev) => this._onDragStart(ev);
-      html.find('li.item').each((i, li) => {
-        if (li.classList.contains('inventory-header')) return;
-        li.setAttribute('draggable', true);
-        li.addEventListener('dragstart', handler, false);
-      });
-    }
-  }
-
   /**************
    *
    *   ACTIONS
@@ -322,6 +293,22 @@ export class BoilerplateActorSheet extends api.HandlebarsApplicationMixin(
   }
 
   /**
+   * Determines effect parent to pass to helper
+   * @param {PointerEvent} event   The originating click event
+   * @param {HTMLElement} target   The capturing HTML element which defined a [data-action]
+   * @private
+   */
+  static async _manageEffect(event, target) {
+    const row = target.closest('li');
+    const document =
+      row.dataset.parentId === this.actor.id
+        ? this.actor
+        : this.actor.items.get(row.dataset.parentId);
+    // Fancy JS to make sure the manage effect function has the correct context
+    onManageActiveEffect.call(document.sheet, event, target);
+  }
+
+  /**
    * Handle clickable rolls.
    * @param {PointerEvent} event   The originating click event
    * @param {HTMLElement} target   The capturing HTML element which defined a [data-action]
@@ -332,12 +319,11 @@ export class BoilerplateActorSheet extends api.HandlebarsApplicationMixin(
     const dataset = target.dataset;
 
     // Handle item rolls.
-    if (dataset.rollType) {
-      if (dataset.rollType == 'item') {
+    switch (dataset.rollType) {
+      case 'item':
         const itemId = target.closest('.item').dataset.itemId;
         const item = this.actor.items.get(itemId);
         if (item) return item.roll();
-      }
     }
 
     // Handle rolls that supply the formula directly.

@@ -21,7 +21,8 @@
         <div class='item-controls effect-controls flexrow'>
           <a
             class='effect-control'
-            data-action='create'
+            data-action="manageEffect"
+            data-action-mode='create'
             title='{{localize "DOCUMENT.Create" type='Effect'}}'
           >
             <i class='fas fa-plus'></i>
@@ -46,21 +47,24 @@
             <div class='item-controls effect-controls flexrow'>
               <a
                 class='effect-control'
-                data-action='toggle'
+                data-action="manageEffect"
+                data-action-mode='toggle'
                 title='{{localize "BOILERPLATE.Effect.Toggle"}}'
               >
                 <i class='fas {{#if effect.disabled}}fa-check{{else}}fa-times{{/if}}'></i>
               </a>
               <a
                 class='effect-control'
-                data-action='edit'
+                data-action="manageEffect"
+                data-action-mode='edit'
                 title='{{localize "DOCUMENT.Update" type='Effect'}}'
               >
                 <i class='fas fa-edit'></i>
               </a>
               <a
                 class='effect-control'
-                data-action='delete'
+                data-action="manageEffect"
+                data-action-mode='delete'
                 title='{{localize "DOCUMENT.Delete" type='Effect'}}'
               >
                 <i class='fas fa-trash'></i>
