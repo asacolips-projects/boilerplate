@@ -304,8 +304,8 @@ export class BoilerplateActorSheet extends api.HandlebarsApplicationMixin(
       row.dataset.parentId === this.actor.id
         ? this.actor
         : this.actor.items.get(row.dataset.parentId);
-    // Fancy JS to make sure the manage effect function has the correct context
-    onManageActiveEffect.call(document.sheet, event, target);
+    // Using a wrapper to forward the correct owner
+    onManageActiveEffect(event, target, document);
   }
 
   /**

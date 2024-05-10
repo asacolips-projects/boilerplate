@@ -16,7 +16,7 @@ export class BoilerplateItemSheet extends api.HandlebarsApplicationMixin(
   static DEFAULT_OPTIONS = {
     classes: ['boilerplate', 'item'],
     actions: {
-      manageEffect: onManageActiveEffect,
+      manageEffect: this._manageEffect,
     },
   };
 
@@ -165,5 +165,22 @@ export class BoilerplateItemSheet extends api.HandlebarsApplicationMixin(
       tabs[partId] = tab;
       return tabs;
     }, {});
+  }
+
+  /**************
+   *
+   *   ACTIONS
+   *
+   **************/
+
+  /**
+   * Determines effect parent to pass to helper
+   * @param {PointerEvent} event   The originating click event
+   * @param {HTMLElement} target   The capturing HTML element which defined a [data-action]
+   * @private
+   */
+  static async _manageEffect(event, target) {
+    // Using a wrapper to forward the correct owner
+    onManageActiveEffect(event, target, this.document);
   }
 }

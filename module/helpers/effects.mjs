@@ -2,10 +2,9 @@
  * Manage Active Effect instances through an Actor or Item Sheet via effect control buttons.
  * @param {PointerEvent} event      The left-click event on the effect control
  * @param {HTMLElement} target      The capturing HTML element which defined a [data-action]
- * @remarks `this` is bound to
+ * @param {Actor|Item} owner        The parent of the active effect
  */
-export function onManageActiveEffect(event, target) {
-  const owner = this.document;
+export function onManageActiveEffect(event, target, owner) {
   event.preventDefault();
   const li = target.closest('li');
   const effect = li.dataset.effectId
@@ -18,7 +17,7 @@ export function onManageActiveEffect(event, target) {
           name: game.i18n.format('DOCUMENT.New', {
             type: game.i18n.localize('DOCUMENT.ActiveEffect'),
           }),
-          icon: 'icons/svg/aura.svg',
+          img: 'icons/svg/aura.svg',
           origin: owner.uuid,
           'duration.rounds':
             li.dataset.effectType === 'temporary' ? 1 : undefined,

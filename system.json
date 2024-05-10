@@ -32,7 +32,7 @@
   "version": "3.0.0",
   "compatibility": {
     "minimum": 12,
-    "verified": "12.321"
+    "verified": "12.322"
   },
   "esmodules": ["module/boilerplate.mjs"],
   "styles": ["css/boilerplate.css"],
