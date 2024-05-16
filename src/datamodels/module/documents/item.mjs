@@ -17,8 +17,8 @@ export class BoilerplateItem extends Item {
    * @override
    */
   getRollData() {
-    // Starts off by populating the roll data with `this.system`
-    const rollData = { ...super.getRollData() };
+    // Starts off by populating the roll data with a shallow copy of `this.system`
+    const rollData = { ...this.system };
 
     // Quit early if there's no parent actor
     if (!this.actor) return rollData;
@@ -31,15 +31,15 @@ export class BoilerplateItem extends Item {
 
   /**
    * Convert the actor document to a plain object.
-   * 
+   *
    * The built in `toObject()` method will ignore derived data when using Data Models.
    * This additional method will instead use the spread operator to return a simplified
    * version of the data.
-   * 
+   *
    * @returns {object} Plain object either via deepClone or the spread operator.
    */
   toPlainObject() {
-    const result = {...this};
+    const result = { ...this };
 
     // Simplify system data.
     result.system = this.system.toPlainObject();
