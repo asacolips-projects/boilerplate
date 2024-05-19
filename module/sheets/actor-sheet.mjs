@@ -35,6 +35,9 @@ export class BoilerplateActorSheet extends api.HandlebarsApplicationMixin(
       { dragSelector: '.item-list .item', dropSelector: null },
       { dragSelector: 'effect-list .effect', dropSelector: null },
     ],
+    form: {
+      handler: this.#onSubmitActorForm,
+    },
   };
 
   /** @override */
@@ -242,6 +245,21 @@ export class BoilerplateActorSheet extends api.HandlebarsApplicationMixin(
     context.spells = spells;
   }
 
+  /**
+   * Actions performed after any render of the Application.
+   * Post-render steps are not awaited by the render process.
+   * @param {ApplicationRenderContext} context      Prepared context data
+   * @param {RenderOptions} options                 Provided render options
+   * @protected
+   */
+  _onRender(context, options) {
+    this.#dragDrop.forEach((d) => d.bind(this.element));
+    this.#disableOverrides();
+    // You may want to add other special handling here
+    // Foundry comes with a large number of utility classes, e.g. SearchFilter
+    // That you may want to implement yourself.
+  }
+
   /* -------------------------------------------- */
 
   /**************
@@ -353,20 +371,6 @@ export class BoilerplateActorSheet extends api.HandlebarsApplicationMixin(
    * Drag and Drop
    *
    ***************/
-
-  /**
-   * Actions performed after any render of the Application.
-   * Post-render steps are not awaited by the render process.
-   * @param {ApplicationRenderContext} context      Prepared context data
-   * @param {RenderOptions} options                 Provided render options
-   * @protected
-   */
-  _onRender(context, options) {
-    this.#dragDrop.forEach((d) => d.bind(this.element));
-    // You may want to add other special handling here besides DragDrop
-    // Foundry comes with a large number of utility classes, e.g. SearchFilter
-    // That you may want to implement yourself.
-  }
 
   /**
    * Define whether a user is able to begin a dragstart workflow for a given drag selector
@@ -612,5 +616,39 @@ export class BoilerplateActorSheet extends api.HandlebarsApplicationMixin(
       };
       return new DragDrop(d);
     });
+  }
+
+  /********************
+   *
+   * Actor Override Handling
+   *
+   ********************/
+
+  /**
+   * Process form submission for the sheet, removing overrides created by active effects
+   * @this {BoilerplateActorSheet}                The handler is called with the application as its bound scope
+   * @param {SubmitEvent} event                   The originating form submission event
+   * @param {HTMLFormElement} form                The form element that was submitted
+   * @param {FormDataExtended} formData           Processed data for the submitted form
+   * @returns {Promise<void>}
+   */
+  static async #onSubmitActorForm(event, form, formData) {
+    const submitData = this._prepareSubmitData(event, form, formData);
+    const overrides = foundry.utils.flattenObject(this.actor.overrides);
+    for (let k of Object.keys(overrides)) delete submitData[k];
+    await this.actor.update(submitData);
+  }
+
+  /**
+   * Disables inputs subject to active effects
+   */
+  #disableOverrides() {
+    const flatOverrides = foundry.utils.flattenObject(this.actor.overrides);
+    for (const override of Object.keys(flatOverrides)) {
+      const input = this.element.querySelector(`[name="${override}"]`);
+      if (input) {
+        input.disabled = true;
+      }
+    }
   }
 }
