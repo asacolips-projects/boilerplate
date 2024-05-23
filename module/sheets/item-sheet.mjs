@@ -21,7 +21,10 @@ export class BoilerplateItemSheet extends api.HandlebarsApplicationMixin(
   static DEFAULT_OPTIONS = {
     classes: ['boilerplate', 'item'],
     actions: {
-      manageEffect: this._manageEffect,
+      viewDoc: this._viewEffect,
+      createDoc: this._createEffect,
+      deleteDoc: this._deleteEffect,
+      toggleEffect: this._toggleEffect,
     },
     form: {
       submitOnChange: true,
@@ -197,14 +200,89 @@ export class BoilerplateItemSheet extends api.HandlebarsApplicationMixin(
    **************/
 
   /**
-   * Determines effect parent to pass to helper
+   * Renders an embedded document's sheet
+   *
+   * @this BoilerplateActorSheet
+   * @param {PointerEvent} event   The originating click event
+   * @param {HTMLElement} target   The capturing HTML element which defined a [data-action]
+   * @protected
+   */
+  static async _viewEffect(event, target) {
+    const effect = this._getEffect(target);
+    effect.sheet.render(true);
+  }
+
+  /**
+   * Handles item deletion
+   *
+   * @this BoilerplateActorSheet
+   * @param {PointerEvent} event   The originating click event
+   * @param {HTMLElement} target   The capturing HTML element which defined a [data-action]
+   * @protected
+   */
+  static async _deleteEffect(event, target) {
+    const effect = this._getEffect(target);
+    await effect.delete();
+  }
+
+  /**
+   * Handle creating a new Owned Item or ActiveEffect for the actor using initial data defined in the HTML dataset
+   *
+   * @this BoilerplateActorSheet
    * @param {PointerEvent} event   The originating click event
    * @param {HTMLElement} target   The capturing HTML element which defined a [data-action]
    * @private
    */
-  static async _manageEffect(event, target) {
-    // Using a wrapper to forward the correct owner
-    onManageActiveEffect(event, target, this.document);
+  static async _createEffect(event, target) {
+    // Retrieve the configured document class for ActiveEffect
+    const aeCls = getDocumentClass('ActiveEffect');
+    // Prepare the document creation data by initializing it a default name.
+    // As of v12, you can define custom Active Effect subtypes just like Item subtypes if you want
+    const effectData = {
+      name: aeCls.defaultName({
+        // defaultName handles an undefined type gracefully
+        type: target.dataset.type,
+        parent: this.item,
+      }),
+    };
+    // Loop through the dataset and add it to our effectData
+    for (const [dataKey, value] of Object.entries(target.dataset)) {
+      // These data attributes are reserved for the action handling
+      if (['action', 'documentClass'].includes(dataKey)) continue;
+      // Nested properties require dot notation in the HTML, e.g. anything with `system`
+      // An example exists in spells.hbs, with `data-system.spell-level`
+      // which turns into the dataKey 'system.spellLevel'
+      foundry.utils.setProperty(effectData, dataKey, value);
+    }
+
+    // Finally, create the embedded document!
+    await aeCls.create(effectData, { parent: this.item });
+  }
+
+  /**
+   * Determines effect parent to pass to helper
+   *
+   * @this BoilerplateActorSheet
+   * @param {PointerEvent} event   The originating click event
+   * @param {HTMLElement} target   The capturing HTML element which defined a [data-action]
+   * @private
+   */
+  static async _toggleEffect(event, target) {
+    const effect = this._getEffect(target);
+    await effect.update({ disabled: !effect.disabled });
+  }
+
+  /** Helper Functions */
+
+  /**
+   * Fetches the row with the data for the rendered embedded document
+   *
+   * @param {HTMLElement} target  The element with the action
+   * @returns {HTMLLIElement} The document's row
+   */
+  _getEffect(target) {
+    const li = target.closest('.effect');
+    return this.item.effects.get(li?.dataset?.effectId);
   }
 
   /**
@@ -297,9 +375,10 @@ export class BoilerplateItemSheet extends api.HandlebarsApplicationMixin(
    * @protected
    */
   async _onDropActiveEffect(event, data) {
-    const effect = await ActiveEffect.implementation.fromDropData(data);
+    const aeCls = getDocumentClass('ActiveEffect');
+    const effect = await aeCls.fromDropData(data);
     if (!this.item.isOwner || !effect) return false;
-    return ActiveEffect.create(effect.toObject(), { parent: this.item });
+    return aeCls.create(effect.toObject(), { parent: this.item });
   }
 
   /* -------------------------------------------- */

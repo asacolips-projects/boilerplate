@@ -21,8 +21,14 @@
         <div class='effect-controls flexrow'>
           <a
             class='effect-control'
-            data-action="manageEffect"
-            data-action-mode='create'
+            data-action='createDoc'
+            data-document-class='ActiveEffect'
+            {{#if (eq section.type "inactive")}}
+              data-disabled="true"
+            {{else if (eq section.type "temporary")}}
+              data-duration.rounds="1"
+            {{/if}}
+            data-origin="{{@root.actor.uuid}}"
             title='{{localize "DOCUMENT.Create" type='Effect'}}'
           >
             <i class='fas fa-plus'></i>
@@ -47,24 +53,23 @@
             <div class='effect-controls flexrow'>
               <a
                 class='effect-control'
-                data-action="manageEffect"
-                data-action-mode='toggle'
+                data-action='toggleEffect'
                 title='{{localize "BOILERPLATE.Effect.Toggle"}}'
               >
                 <i class='fas {{#if effect.disabled}}fa-check{{else}}fa-times{{/if}}'></i>
               </a>
               <a
                 class='effect-control'
-                data-action="manageEffect"
-                data-action-mode='edit'
+                data-action='viewDoc'
+                data-document-class='ActiveEffect'
                 title='{{localize "DOCUMENT.Update" type='Effect'}}'
               >
                 <i class='fas fa-edit'></i>
               </a>
               <a
                 class='effect-control'
-                data-action="manageEffect"
-                data-action-mode='delete'
+                data-action='deleteDoc'
+                data-document-class='ActiveEffect'
                 title='{{localize "DOCUMENT.Delete" type='Effect'}}'
               >
                 <i class='fas fa-trash'></i>

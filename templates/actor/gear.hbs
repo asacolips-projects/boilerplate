@@ -9,7 +9,8 @@
           <a
             class='item-control item-create'
             title='{{localize "DOCUMENT.Create" type='Item'}}'
-            data-action='createItem'
+            data-action='createDoc'
+            data-document-class='Item'
             data-type='gear'
           >
             <i class='fas fa-plus'></i>
@@ -38,7 +39,8 @@
           <a
             class='item-control item-edit'
             title='{{localize "DOCUMENT.Update" type='Gear'}}'
-            data-action='viewItem'
+            data-action='viewDoc'
+            data-document-class='Item'
           >
             <i class='fas fa-edit'></i>
           </a>
@@ -46,7 +48,8 @@
             <a
               class='item-control item-delete'
               title='{{localize "DOCUMENT.Delete" type='Gear'}}'
-              data-action='deleteItem'
+              data-action='deleteDoc'
+              data-document-class='Item'
             >
               <i class='fas fa-trash'></i>
             </a>

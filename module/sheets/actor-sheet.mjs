@@ -25,16 +25,13 @@ export class BoilerplateActorSheet extends api.HandlebarsApplicationMixin(
       height: 600,
     },
     actions: {
-      viewItem: this._viewItem,
-      createItem: this._createItem,
-      deleteItem: this._deleteItem,
-      manageEffect: this._manageEffect,
+      viewDoc: this._viewDoc,
+      createDoc: this._createDoc,
+      deleteDoc: this._deleteDoc,
+      toggleEffect: this._toggleEffect,
       roll: this._onRoll,
     },
-    dragDrop: [
-      { dragSelector: '.items-list .item', dropSelector: null },
-      { dragSelector: '.effects-list .effect', dropSelector: null },
-    ],
+    dragDrop: [{ dragSelector: '[data-drag]', dropSelector: null }],
     form: {
       handler: this.#onSubmitActorForm,
       submitOnChange: true,
@@ -261,8 +258,6 @@ export class BoilerplateActorSheet extends api.HandlebarsApplicationMixin(
     // That you may want to implement yourself.
   }
 
-  /* -------------------------------------------- */
-
   /**************
    *
    *   ACTIONS
@@ -270,74 +265,81 @@ export class BoilerplateActorSheet extends api.HandlebarsApplicationMixin(
    **************/
 
   /**
+   * Renders an embedded document's sheet
    *
+   * @this BoilerplateActorSheet
    * @param {PointerEvent} event   The originating click event
    * @param {HTMLElement} target   The capturing HTML element which defined a [data-action]
    * @protected
    */
-  static async _viewItem(event, target) {
-    const li = $(target).parents('.item');
-    const item = this.actor.items.get(li.data('itemId'));
-    item.sheet.render(true);
+  static async _viewDoc(event, target) {
+    const doc = this._getEmbeddedDocument(target);
+    doc.sheet.render(true);
   }
 
   /**
+   * Handles item deletion
    *
+   * @this BoilerplateActorSheet
    * @param {PointerEvent} event   The originating click event
    * @param {HTMLElement} target   The capturing HTML element which defined a [data-action]
    * @protected
    */
-  static async _deleteItem(event, target) {
-    const li = $(target).parents('.item');
-    const item = this.actor.items.get(li.data('itemId'));
-    item.delete();
-    li.slideUp(200, () => this.render(false));
+  static async _deleteDoc(event, target) {
+    const doc = this._getEmbeddedDocument(target);
+    await doc.delete();
   }
 
   /**
-   * Handle creating a new Owned Item for the actor using initial data defined in the HTML dataset
+   * Handle creating a new Owned Item or ActiveEffect for the actor using initial data defined in the HTML dataset
+   *
+   * @this BoilerplateActorSheet
    * @param {PointerEvent} event   The originating click event
    * @param {HTMLElement} target   The capturing HTML element which defined a [data-action]
    * @private
    */
-  static async _createItem(event, target) {
-    event.preventDefault();
-    // Get the type of item to create.
-    const type = target.dataset.type;
-    // Initialize a default name.
-    const name = `New ${type.capitalize()}`;
-    // Prepare the item object.
-    const itemData = {
-      name: name,
-      type: type,
-      // Grab any data associated with this control.
-      system: target.dataset,
+  static async _createDoc(event, target) {
+    // Retrieve the configured document class for Item or ActiveEffect
+    const docCls = getDocumentClass(target.dataset.documentClass);
+    // Prepare the document creation data by initializing it a default name.
+    const docData = {
+      name: docCls.defaultName({
+        // defaultName handles an undefined type gracefully
+        type: target.dataset.type,
+        parent: this.actor,
+      }),
     };
-    // Remove the type from the dataset since it's in the itemData.type prop.
-    delete itemData.system['type'];
+    // Loop through the dataset and add it to our docData
+    for (const [dataKey, value] of Object.entries(target.dataset)) {
+      // These data attributes are reserved for the action handling
+      if (['action', 'documentClass'].includes(dataKey)) continue;
+      // Nested properties require dot notation in the HTML, e.g. anything with `system`
+      // An example exists in spells.hbs, with `data-system.spell-level`
+      // which turns into the dataKey 'system.spellLevel'
+      foundry.utils.setProperty(docData, dataKey, value);
+    }
 
-    // Finally, create the item!
-    return await Item.create(itemData, { parent: this.actor });
+    // Finally, create the embedded document!
+    await docCls.create(docData, { parent: this.actor });
   }
 
   /**
    * Determines effect parent to pass to helper
+   *
+   * @this BoilerplateActorSheet
    * @param {PointerEvent} event   The originating click event
    * @param {HTMLElement} target   The capturing HTML element which defined a [data-action]
    * @private
    */
-  static async _manageEffect(event, target) {
-    const row = target.closest('li');
-    const document =
-      row.dataset.parentId === this.actor.id
-        ? this.actor
-        : this.actor.items.get(row.dataset.parentId);
-    // Using a wrapper to forward the correct owner
-    onManageActiveEffect(event, target, document);
+  static async _toggleEffect(event, target) {
+    const effect = this._getEmbeddedDocument(target);
+    await effect.update({ disabled: !effect.disabled });
   }
 
   /**
    * Handle clickable rolls.
+   *
+   * @this BoilerplateActorSheet
    * @param {PointerEvent} event   The originating click event
    * @param {HTMLElement} target   The capturing HTML element which defined a [data-action]
    * @protected
@@ -349,8 +351,7 @@ export class BoilerplateActorSheet extends api.HandlebarsApplicationMixin(
     // Handle item rolls.
     switch (dataset.rollType) {
       case 'item':
-        const itemId = target.closest('.item').dataset.itemId;
-        const item = this.actor.items.get(itemId);
+        const item = this._getEmbeddedDocument(target);
         if (item) return item.roll();
     }
 
@@ -364,6 +365,30 @@ export class BoilerplateActorSheet extends api.HandlebarsApplicationMixin(
         rollMode: game.settings.get('core', 'rollMode'),
       });
       return roll;
+    }
+  }
+
+  /** Helper Functions */
+
+  /**
+   * Fetches the row with the data for the rendered embedded document
+   *
+   * @param {HTMLElement} target  The element with the action
+   * @returns {HTMLLIElement} The document's row
+   */
+  _getEmbeddedDocument(target) {
+    if (target.dataset.documentClass === 'Item') {
+      const itemRow = target.closest('.item');
+      return this.actor.items.get(itemRow?.dataset?.itemId);
+    }
+    // If it's not an item it's an effect
+    else {
+      const li = target.closest('.effect');
+      const parent =
+        li.dataset.parentId === this.actor.id
+          ? this.actor
+          : this.actor.items.get(li?.dataset?.parentId);
+      return parent.effects.get(li?.dataset?.effectId);
     }
   }
 
@@ -404,23 +429,8 @@ export class BoilerplateActorSheet extends api.HandlebarsApplicationMixin(
     const li = event.currentTarget;
     if ('link' in event.target.dataset) return;
 
-    let dragData = null;
-
-    // Owned Items
-    if (li.dataset.itemId) {
-      const item = this.actor.items.get(li.dataset.itemId);
-      dragData = item.toDragData();
-    }
-
-    // Active Effect
-    if (li.dataset.effectId) {
-      const parent =
-        li.dataset.parentId === this.actor.id
-          ? this.actor
-          : this.actor.items.get(row.dataset.parentId);
-      const effect = parent.effects.get(li.dataset.effectId);
-      dragData = effect.toDragData();
-    }
+    // Chained operation
+    let dragData = this._getEmbeddedDocument(li)?.toDragData();
 
     if (!dragData) return;
 
@@ -467,10 +477,12 @@ export class BoilerplateActorSheet extends api.HandlebarsApplicationMixin(
    * @protected
    */
   async _onDropActiveEffect(event, data) {
-    const effect = await ActiveEffect.implementation.fromDropData(data);
+    const aeCls = getDocumentClass('ActiveEffect');
+    const effect = await aeCls.fromDropData(data);
     if (!this.actor.isOwner || !effect) return false;
     if (effect.target === this.actor) return false;
-    return ActiveEffect.create(effect.toObject(), { parent: this.actor });
+    // TODO: Active Effect Sorting (complicated due to inherited effects)
+    return aeCls.create(effect.toObject(), { parent: this.actor });
   }
 
   /**

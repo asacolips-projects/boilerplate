@@ -15,9 +15,10 @@
             <a
               class='item-control item-create'
               title='{{localize "DOCUMENT.Create" type='Spell'}}'
-              data-action='createItem'
+              data-action='createDoc'
+              data-document-class='Item'
               data-type='spell'
-              data-spell-level='{{spellLevel}}'
+              data-system.spell-level='{{spellLevel}}'
             >
               <i class='fas fa-plus'></i>
               {{localize 'BOILERPLATE.Item.Spell.AddLVL' level=spellLevel}}
@@ -44,7 +45,8 @@
             <a
               class='item-control item-edit'
               title='{{localize "DOCUMENT.Edit" type='spell'}}'
-              data-action='viewItem'
+              data-action='viewDoc'
+              data-document-class='Item'
             >
               <i class='fas fa-edit'></i>
             </a>
@@ -52,7 +54,8 @@
               <a
                 class='item-control item-delete'
                 title='{{localize "DOCUMENT.Delete" type='spell'}}'
-                data-action='deleteItem'
+                data-action='deleteDoc'
+                data-document-class='Item'
               >
                 <i class='fas fa-trash'></i>
               </a>

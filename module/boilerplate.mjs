@@ -69,7 +69,7 @@ Handlebars.registerHelper('toLowerCase', function (str) {
 
 Hooks.once('ready', function () {
   // Wait to register hotbar drop hook on ready so that modules could register earlier if they want to
-  Hooks.on('hotbarDrop', (bar, data, slot) => createItemMacro(data, slot));
+  Hooks.on('hotbarDrop', (bar, data, slot) => createDocMacro(data, slot));
 });
 
 /* -------------------------------------------- */
@@ -83,7 +83,7 @@ Hooks.once('ready', function () {
  * @param {number} slot     The hotbar slot to use
  * @returns {Promise}
  */
-async function createItemMacro(data, slot) {
+async function createDocMacro(data, slot) {
   // First, determine if this is a valid owned item.
   if (data.type !== 'Item') return;
   if (!data.uuid.includes('Actor.') && !data.uuid.includes('Token.')) {
