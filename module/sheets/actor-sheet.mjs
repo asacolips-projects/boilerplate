@@ -32,8 +32,8 @@ export class BoilerplateActorSheet extends api.HandlebarsApplicationMixin(
       roll: this._onRoll,
     },
     dragDrop: [
-      { dragSelector: '.item-list .item', dropSelector: null },
-      { dragSelector: 'effect-list .effect', dropSelector: null },
+      { dragSelector: '.items-list .item', dropSelector: null },
+      { dragSelector: '.effects-list .effect', dropSelector: null },
     ],
     form: {
       handler: this.#onSubmitActorForm,
@@ -403,6 +403,8 @@ export class BoilerplateActorSheet extends api.HandlebarsApplicationMixin(
   _onDragStart(event) {
     const li = event.currentTarget;
     if ('link' in event.target.dataset) return;
+
+    let dragData = null;
 
     // Owned Items
     if (li.dataset.itemId) {
