@@ -7,7 +7,7 @@ const { api, sheets } = foundry.applications;
 
 /**
  * Extend the basic ActorSheet with some very simple modifications
- * @extends {ActorSheet}
+ * @extends {ActorSheetV2}
  */
 export class BoilerplateActorSheet extends api.HandlebarsApplicationMixin(
   sheets.ActorSheetV2
@@ -473,8 +473,6 @@ export class BoilerplateActorSheet extends api.HandlebarsApplicationMixin(
     return ActiveEffect.create(effect.toObject(), { parent: this.actor });
   }
 
-  /* -------------------------------------------- */
-
   /**
    * Handle dropping of an Actor data onto another Actor sheet
    * @param {DragEvent} event            The concluding DragEvent which contains drop data
@@ -509,8 +507,6 @@ export class BoilerplateActorSheet extends api.HandlebarsApplicationMixin(
     return this._onDropItemCreate(itemData, event);
   }
 
-  /* -------------------------------------------- */
-
   /**
    * Handle dropping of a Folder on an Actor Sheet.
    * The core sheet currently supports dropping a Folder of Items to create all items as owned items.
@@ -544,8 +540,6 @@ export class BoilerplateActorSheet extends api.HandlebarsApplicationMixin(
     itemData = itemData instanceof Array ? itemData : [itemData];
     return this.actor.createEmbeddedDocuments('Item', itemData);
   }
-
-  /* -------------------------------------------- */
 
   /**
    * Handle a drop event for an existing embedded Item to sort that Item relative to its siblings
@@ -587,7 +581,7 @@ export class BoilerplateActorSheet extends api.HandlebarsApplicationMixin(
     return this.actor.updateEmbeddedDocuments('Item', updateData);
   }
 
-  /** The following pieces are  */
+  /** The following pieces set up drag handling and are unlikely to need modification  */
 
   /**
    * Returns an array of DragDrop instances
