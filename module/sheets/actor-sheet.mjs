@@ -37,6 +37,7 @@ export class BoilerplateActorSheet extends api.HandlebarsApplicationMixin(
     ],
     form: {
       handler: this.#onSubmitActorForm,
+      submitOnChange: true,
     },
   };
 

@@ -18,6 +18,9 @@ export class BoilerplateItemSheet extends api.HandlebarsApplicationMixin(
     actions: {
       manageEffect: this._manageEffect,
     },
+    form: {
+      submitOnChange: true,
+    },
   };
 
   /* -------------------------------------------- */
