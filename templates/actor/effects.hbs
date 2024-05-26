@@ -9,7 +9,7 @@
       <li
         class='effects-header flexrow'
         data-effect-type='{{section.type}}'
-        data-parent-id='{{@root.actor.id}}'
+        data-drag="true"
       >
         <h3 class='effect-name flexrow'>
           {{localize section.label}}
@@ -43,6 +43,8 @@
             class='effect effect flexrow'
             data-effect-id='{{effect.id}}'
             data-parent-id='{{effect.parent.id}}'
+            data-document-class='ActiveEffect'
+            data-drag="true"
           >
             <div class='effect-name flexrow'>
               <img class='effect-image' src='{{effect.img}}' />
@@ -61,7 +63,6 @@
               <a
                 class='effect-control'
                 data-action='viewDoc'
-                data-document-class='ActiveEffect'
                 title='{{localize "DOCUMENT.Update" type='Effect'}}'
               >
                 <i class='fas fa-edit'></i>
@@ -69,7 +70,6 @@
               <a
                 class='effect-control'
                 data-action='deleteDoc'
-                data-document-class='ActiveEffect'
                 title='{{localize "DOCUMENT.Delete" type='Effect'}}'
               >
                 <i class='fas fa-trash'></i>

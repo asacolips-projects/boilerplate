@@ -57,7 +57,12 @@
           </div>
         </li>
         {{#each features as |item id|}}
-          <li class='item flexrow' data-item-id='{{item._id}}'>
+          <li
+            class='item flexrow'
+            data-item-id='{{item._id}}'
+            data-drag='true'
+            data-document-class='Item'
+          >
             <div class='item-name'>
               <div class='item-image'>
                 <a class='rollable' data-roll-type='item' data-action='roll'>
@@ -76,7 +81,6 @@
                 class='item-control item-edit'
                 title='{{localize "DOCUMENT.Edit" type='feature'}}'
                 data-action='viewDoc'
-                data-document-class='Item'
               >
                 <i class='fas fa-edit'></i>
               </a>
@@ -85,7 +89,6 @@
                   class='item-control item-delete'
                   title='{{localize "DOCUMENT.Delete" type='feature'}}'
                   data-action='deleteDoc'
-                  data-document-class='Item'
                 >
                   <i class='fas fa-trash'></i>
                 </a>

@@ -1,7 +1,4 @@
-import {
-  onManageActiveEffect,
-  prepareActiveEffectCategories,
-} from '../helpers/effects.mjs';
+import { prepareActiveEffectCategories } from '../helpers/effects.mjs';
 
 const { api, sheets } = foundry.applications;
 
@@ -367,6 +364,8 @@ export class BoilerplateItemSheet extends api.HandlebarsApplicationMixin(
     }
   }
 
+  /* -------------------------------------------- */
+
   /**
    * Handle the dropping of ActiveEffect data onto an Actor Sheet
    * @param {DragEvent} event                  The concluding DragEvent which contains drop data
@@ -378,7 +377,48 @@ export class BoilerplateItemSheet extends api.HandlebarsApplicationMixin(
     const aeCls = getDocumentClass('ActiveEffect');
     const effect = await aeCls.fromDropData(data);
     if (!this.item.isOwner || !effect) return false;
-    return aeCls.create(effect.toObject(), { parent: this.item });
+
+    if (this.item.uuid === effect.parent?.uuid)
+      return this._onEffectSort(event, effect);
+    return aeCls.create(effect, { parent: this.item });
+  }
+
+  /**
+   * Sorts an Active Effect based on its surrounding attributes
+   *
+   * @param {DragEvent} event
+   * @param {ActiveEffect} effect
+   */
+  _onEffectSort(event, effect) {
+    const effects = this.item.effects;
+    const dropTarget = event.target.closest('[data-effect-id]');
+    if (!dropTarget) return;
+    const target = effects.get(dropTarget.dataset.effectId);
+
+    // Don't sort on yourself
+    if (effect.id === target.id) return;
+
+    // Identify sibling items based on adjacent HTML elements
+    const siblings = [];
+    for (let el of dropTarget.parentElement.children) {
+      const siblingId = el.dataset.effectId;
+      if (siblingId && siblingId !== effect.id)
+        siblings.push(effects.get(el.dataset.effectId));
+    }
+
+    // Perform the sort
+    const sortUpdates = SortingHelpers.performIntegerSort(effect, {
+      target,
+      siblings,
+    });
+    const updateData = sortUpdates.map((u) => {
+      const update = u.update;
+      update._id = u.target._id;
+      return update;
+    });
+
+    // Perform the update
+    return this.item.updateEmbeddedDocuments('ActiveEffect', updateData);
   }
 
   /* -------------------------------------------- */

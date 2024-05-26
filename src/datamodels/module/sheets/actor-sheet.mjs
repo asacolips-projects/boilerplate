@@ -1,7 +1,4 @@
-import {
-  onManageActiveEffect,
-  prepareActiveEffectCategories,
-} from '../helpers/effects.mjs';
+import { prepareActiveEffectCategories } from '../helpers/effects.mjs';
 
 const { api, sheets } = foundry.applications;
 
