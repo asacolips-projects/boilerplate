@@ -371,25 +371,22 @@ export class BoilerplateActorSheet extends api.HandlebarsApplicationMixin(
   /** Helper Functions */
 
   /**
-   * Fetches the row with the data for the rendered embedded document
+   * Fetches the embedded document representing the containing HTML element
    *
-   * @param {HTMLElement} target  The element with the action
-   * @returns {HTMLLIElement} The document's row
+   * @param {HTMLElement} target    The element subject to search
+   * @returns {Item | ActiveEffect} The embedded Item or ActiveEffect
    */
   _getEmbeddedDocument(target) {
-    if (target.dataset.documentClass === 'Item') {
-      const itemRow = target.closest('.item');
-      return this.actor.items.get(itemRow?.dataset?.itemId);
-    }
-    // If it's not an item it's an effect
-    else {
-      const li = target.closest('.effect');
+    const docRow = target.closest('li[data-document-class]');
+    if (docRow.dataset.documentClass === 'Item') {
+      return this.actor.items.get(docRow.dataset.itemId);
+    } else if (docRow.dataset.documentClass === 'ActiveEffect') {
       const parent =
-        li.dataset.parentId === this.actor.id
+        docRow.dataset.parentId === this.actor.id
           ? this.actor
-          : this.actor.items.get(li?.dataset?.parentId);
-      return parent.effects.get(li?.dataset?.effectId);
-    }
+          : this.actor.items.get(docRow?.dataset.parentId);
+      return parent.effects.get(docRow?.dataset.effectId);
+    } else return console.warn('Could not find document class');
   }
 
   /***************
@@ -426,11 +423,11 @@ export class BoilerplateActorSheet extends api.HandlebarsApplicationMixin(
    * @protected
    */
   _onDragStart(event) {
-    const li = event.currentTarget;
+    const docRow = event.currentTarget.closest('li');
     if ('link' in event.target.dataset) return;
 
     // Chained operation
-    let dragData = this._getEmbeddedDocument(li)?.toDragData();
+    let dragData = this._getEmbeddedDocument(docRow)?.toDragData();
 
     if (!dragData) return;
 
@@ -480,9 +477,69 @@ export class BoilerplateActorSheet extends api.HandlebarsApplicationMixin(
     const aeCls = getDocumentClass('ActiveEffect');
     const effect = await aeCls.fromDropData(data);
     if (!this.actor.isOwner || !effect) return false;
-    if (effect.target === this.actor) return false;
-    // TODO: Active Effect Sorting (complicated due to inherited effects)
-    return aeCls.create(effect.toObject(), { parent: this.actor });
+    if (effect.target === this.actor)
+      return this._onSortActiveEffect(event, effect);
+    return aeCls.create(effect, { parent: this.actor });
+  }
+
+  /**
+   * Handle a drop event for an existing embedded Active Effect to sort that Active Effect relative to its siblings
+   *
+   * @param {DragEvent} event
+   * @param {ActiveEffect} effect
+   */
+  async _onSortActiveEffect(event, effect) {
+    /** @type {HTMLElement} */
+    const dropTarget = event.target.closest('[data-effect-id]');
+    if (!dropTarget) return;
+    const target = this._getEmbeddedDocument(dropTarget);
+
+    // Don't sort on yourself
+    if (effect.uuid === target.uuid) return;
+
+    // Identify sibling items based on adjacent HTML elements
+    const siblings = [];
+    for (const el of dropTarget.parentElement.children) {
+      const siblingId = el.dataset.effectId;
+      const parentId = el.dataset.parentId;
+      if (
+        siblingId &&
+        parentId &&
+        (siblingId !== effect.id || parentId !== effect.parent.id)
+      )
+        siblings.push(this._getEmbeddedDocument(el));
+    }
+
+    // Perform the sort
+    const sortUpdates = SortingHelpers.performIntegerSort(effect, {
+      target,
+      siblings,
+    });
+
+    // Split the updates up by parent document
+    const directUpdates = [];
+
+    const grandchildUpdateData = sortUpdates.reduce((items, u) => {
+      const parentId = u.target.parent.id;
+      const update = { _id: u.target.id, ...u.update };
+      if (parentId === this.actor.id) {
+        directUpdates.push(update);
+        return items;
+      }
+      if (items[parentId]) items[parentId].push(update);
+      else items[parentId] = [update];
+      return items;
+    }, {});
+
+    // Effects-on-items updates
+    for (const [itemId, updates] of Object.entries(grandchildUpdateData)) {
+      await this.actor.items
+        .get(itemId)
+        .updateEmbeddedDocuments('ActiveEffect', updates);
+    }
+
+    // Update on the main actor
+    return this.actor.updateEmbeddedDocuments('ActiveEffect', directUpdates);
   }
 
   /**
@@ -509,14 +566,13 @@ export class BoilerplateActorSheet extends api.HandlebarsApplicationMixin(
   async _onDropItem(event, data) {
     if (!this.actor.isOwner) return false;
     const item = await Item.implementation.fromDropData(data);
-    const itemData = item.toObject();
 
     // Handle item sorting within the same Actor
     if (this.actor.uuid === item.parent?.uuid)
-      return this._onSortItem(event, itemData);
+      return this._onSortItem(event, item);
 
     // Create the owned item
-    return this._onDropItemCreate(itemData, event);
+    return this._onDropItemCreate(item, event);
   }
 
   /**
@@ -534,7 +590,7 @@ export class BoilerplateActorSheet extends api.HandlebarsApplicationMixin(
     const droppedItemData = await Promise.all(
       folder.contents.map(async (item) => {
         if (!(document instanceof Item)) item = await fromUuid(item.uuid);
-        return item.toObject();
+        return item;
       })
     );
     return this._onDropItemCreate(droppedItemData, event);
@@ -556,30 +612,29 @@ export class BoilerplateActorSheet extends api.HandlebarsApplicationMixin(
   /**
    * Handle a drop event for an existing embedded Item to sort that Item relative to its siblings
    * @param {Event} event
-   * @param {Object} itemData
+   * @param {Item} item
    * @private
    */
-  _onSortItem(event, itemData) {
+  _onSortItem(event, item) {
     // Get the drag source and drop target
     const items = this.actor.items;
-    const source = items.get(itemData._id);
     const dropTarget = event.target.closest('[data-item-id]');
     if (!dropTarget) return;
     const target = items.get(dropTarget.dataset.itemId);
 
     // Don't sort on yourself
-    if (source.id === target.id) return;
+    if (item.id === target.id) return;
 
     // Identify sibling items based on adjacent HTML elements
     const siblings = [];
     for (let el of dropTarget.parentElement.children) {
       const siblingId = el.dataset.itemId;
-      if (siblingId && siblingId !== source.id)
+      if (siblingId && siblingId !== item.id)
         siblings.push(items.get(el.dataset.itemId));
     }
 
     // Perform the sort
-    const sortUpdates = SortingHelpers.performIntegerSort(source, {
+    const sortUpdates = SortingHelpers.performIntegerSort(item, {
       target,
       siblings,
     });

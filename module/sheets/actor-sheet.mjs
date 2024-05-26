@@ -502,39 +502,41 @@ export class BoilerplateActorSheet extends api.HandlebarsApplicationMixin(
       if (
         siblingId &&
         parentId &&
-        siblingId !== effect.id &&
-        parentId !== effect.parent.id
+        (siblingId !== effect.id || parentId !== effect.parent.id)
       )
         siblings.push(this._getEmbeddedDocument(el));
     }
-
-    console.log(siblings);
 
     // Perform the sort
     const sortUpdates = SortingHelpers.performIntegerSort(effect, {
       target,
       siblings,
     });
-    const updateData = sortUpdates
-      .map((u) => {
-        const update = u.update;
-        update._id = u.target._id;
-        return update;
-      })
-      .partition((update) => update.parent.id === this.actor.id);
 
-    const itemEffects = updateData[0].reduce((acc, update) => {
-      if (acc[update.parent.id]) acc[update.parent.id].push(update);
-      else acc[update.parent.id] = [update];
-      return acc;
+    // Split the updates up by parent document
+    const directUpdates = [];
+
+    const grandchildUpdateData = sortUpdates.reduce((items, u) => {
+      const parentId = u.target.parent.id;
+      const update = { _id: u.target.id, ...u.update };
+      if (parentId === this.actor.id) {
+        directUpdates.push(update);
+        return items;
+      }
+      if (items[parentId]) items[parentId].push(update);
+      else items[parentId] = [update];
+      return items;
     }, {});
 
-    for (const [itemId, updates] of itemEffects) {
-      await this.actor.items.get(itemId);
+    // Effects-on-items updates
+    for (const [itemId, updates] of Object.entries(grandchildUpdateData)) {
+      await this.actor.items
+        .get(itemId)
+        .updateEmbeddedDocuments('ActiveEffect', updates);
     }
 
-    // Perform the update
-    return this.actor.updateEmbeddedDocuments('ActiveEffect', updateData[1]);
+    // Update on the main actor
+    return this.actor.updateEmbeddedDocuments('ActiveEffect', directUpdates);
   }
 
   /**
@@ -627,8 +629,6 @@ export class BoilerplateActorSheet extends api.HandlebarsApplicationMixin(
       if (siblingId && siblingId !== item.id)
         siblings.push(items.get(el.dataset.itemId));
     }
-
-    console.log(siblings);
 
     // Perform the sort
     const sortUpdates = SortingHelpers.performIntegerSort(item, {
