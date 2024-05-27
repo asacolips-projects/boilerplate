@@ -32,7 +32,7 @@ export class BoilerplateActorSheet extends ActorSheet {
   /* -------------------------------------------- */
 
   /** @override */
-  getData() {
+  async getData() {
     // Retrieve the data structure from the base sheet. You can inspect or log
     // the context variable to see the structure, but some key properties for
     // sheets are the actor object, the data object, whether or not it's
@@ -40,11 +40,14 @@ export class BoilerplateActorSheet extends ActorSheet {
     const context = super.getData();
 
     // Use a safe clone of the actor data for further operations.
-    const actorData = context.data;
+    const actorData = this.document.toObject(false);
 
     // Add the actor's data to context.data for easier access, as well as flags.
     context.system = actorData.system;
     context.flags = actorData.flags;
+
+    // Adding a pointer to CONFIG.BOILERPLATE
+    context.config = CONFIG.BOILERPLATE;
 
     // Prepare character data and items.
     if (actorData.type == 'character') {
@@ -57,8 +60,21 @@ export class BoilerplateActorSheet extends ActorSheet {
       this._prepareItems(context);
     }
 
-    // Add roll data for TinyMCE editors.
-    context.rollData = context.actor.getRollData();
+    // Enrich biography info for display
+    // Enrichment turns text like `[[/r 1d20]]` into buttons
+    context.enrichedBiography = await TextEditor.enrichHTML(
+      this.actor.system.biography,
+      {
+        // Whether to show secret blocks in the finished html
+        secrets: this.document.isOwner,
+        // Necessary in v11, can be removed in v12
+        async: true,
+        // Data to fill in for inline rolls
+        rollData: this.actor.getRollData(),
+        // Relative UUID resolution
+        relativeTo: this.actor,
+      }
+    );
 
     // Prepare active effects
     context.effects = prepareActiveEffectCategories(
@@ -71,25 +87,19 @@ export class BoilerplateActorSheet extends ActorSheet {
   }
 
   /**
-   * Organize and classify Items for Character sheets.
+   * Character-specific context modifications
    *
-   * @param {Object} actorData The actor to prepare.
-   *
-   * @return {undefined}
+   * @param {object} context The context object to mutate
    */
   _prepareCharacterData(context) {
-    // Handle ability scores.
-    for (let [k, v] of Object.entries(context.system.abilities)) {
-      v.label = game.i18n.localize(CONFIG.BOILERPLATE.abilities[k]) ?? k;
-    }
+    // This is where you can enrich character-specific editor fields
+    // or setup anything else that's specific to this type
   }
 
   /**
-   * Organize and classify Items for Character sheets.
+   * Organize and classify Items for Actor sheets.
    *
-   * @param {Object} actorData The actor to prepare.
-   *
-   * @return {undefined}
+   * @param {object} context The context object to mutate
    */
   _prepareItems(context) {
     // Initialize containers.

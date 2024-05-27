@@ -18,7 +18,8 @@
 
     {{!-- Description Tab --}}
     <div class="tab" data-group="primary" data-tab="description">
-      {{editor system.description target="system.description" rollData=rollData button=true owner=owner editable=editable}}
+      {{!-- Editors must receive enriched text data from getData to properly handle rolls --}}
+      {{editor enrichedDescription target="system.description" engine="prosemirror" button=true editable=editable}}
     </div>
 
     {{!-- Attributes Tab --}}
