@@ -17,8 +17,8 @@ export class BoilerplateItem extends Item {
    * @override
    */
   getRollData() {
-    // Starts off by populating the roll data with `this.system`
-    const rollData = { ...super.getRollData() };
+    // Starts off by populating the roll data with a shallow copy of `this.system`
+    const rollData = { ...this.system };
 
     // Quit early if there's no parent actor
     if (!this.actor) return rollData;

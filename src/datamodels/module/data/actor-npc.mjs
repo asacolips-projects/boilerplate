@@ -1,4 +1,4 @@
-import BoilerplateActorBase from "./actor-base.mjs";
+import BoilerplateActorBase from "./base-actor.mjs";
 
 export default class BoilerplateNPC extends BoilerplateActorBase {
 

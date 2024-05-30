@@ -1,4 +1,4 @@
-import BoilerplateItemBase from "./item-base.mjs";
+import BoilerplateItemBase from "./base-item.mjs";
 
 export default class BoilerplateItem extends BoilerplateItemBase {
 

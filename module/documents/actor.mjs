@@ -69,8 +69,8 @@ export class BoilerplateActor extends Actor {
    * Override getRollData() that's supplied to rolls.
    */
   getRollData() {
-    // Starts off by populating the roll data with `this.system`
-    const data = { ...super.getRollData() };
+    // Starts off by populating the roll data with a shallow copy of `this.system`
+    const data = { ...this.system };
 
     // Prepare character roll data.
     this._getCharacterRollData(data);
