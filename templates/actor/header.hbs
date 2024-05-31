@@ -26,7 +26,9 @@
         and it will add a small amount of padding, a border, and will
         center all of its child elements content and text. }}
       <div class='resource flex-group-center'>
-        <label for='system.health.value' class='resource-label'>Health</label>
+        <label for='system.health.value' class='resource-label'>
+          {{localize 'BOILERPLATE.Actor.base.Health'}}
+        </label>
         <div class='resource-content flexrow flex-center flex-between'>
           <input
             type='text'
@@ -45,7 +47,9 @@
       </div>
 
       <div class='resource flex-group-center'>
-        <label for='system.power.value' class='resource-label'>Power</label>
+        <label for='system.power.value' class='resource-label'>
+          {{localize 'BOILERPLATE.Actor.base.Power'}}
+        </label>
         <div class='resource-content flexrow flex-center flex-between'>
           <input
             type='text'
@@ -65,10 +69,9 @@
 
       <div class='resource flex-group-center'>
         {{#if (eq actor.type 'character')}}
-          <label
-            for='system.attributes.level.value'
-            class='resource-label'
-          >Level</label>
+          <label class='resource-label'>
+            {{localize 'BOILERPLATE.Actor.Character.Level'}}
+          </label>
           <div class='resource-content flexrow flex-center flex-between'>
             <input
               type='text'
@@ -79,7 +82,7 @@
           </div>
         {{/if}}
         {{#if (eq actor.type 'npc')}}
-          <label for='system.cr' class='resource-label'>CR / XP</label>
+          <label class='resource-label'>{{localize 'BOILERPLATE.Actor.NPC.CR'}} / {{localize 'BOILERPLATE.Actor.NPC.XP'}}</label>
           <div class='resource-content flexrow flex-center flex-between'>
             <input
               type='text'
@@ -87,7 +90,7 @@
               value='{{system.cr}}'
               data-dtype='Number'
             />
-            <span> / </span>
+            <span></span>
             <input
               type='text'
               disabled='true'

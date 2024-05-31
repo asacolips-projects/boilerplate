@@ -13,7 +13,6 @@
         {{#each system.abilities as |ability key|}}
           <div class='ability flexrow flex-group-center'>
             <label
-              for='system.abilities.{{key}}.value'
               class='resource-label rollable flexlarge align-left'
               data-action='roll'
               data-roll='d20+@abilities.{{key}}.mod'

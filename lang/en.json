@@ -19,6 +19,18 @@
         "Gear": "Gear",
         "Spells": "Spells",
         "Effects": "Effects"
+      },
+      "base": {
+        "Biography": "Biography",
+        "Health": "Health",
+        "Power": "Power"
+      },
+      "Character": {
+        "Level": "Level"
+      },
+      "NPC": {
+        "CR": "CR",
+        "XP": "XP"
       }
     },
     "Item": {
@@ -27,7 +39,16 @@
         "Description": "Description",
         "Effects": "Effects"
       },
+      "Gear": {
+        "RollFormula": "Roll Formula",
+        "NumDice": "Number of Dice",
+        "DieSize": "Die Size",
+        "RollMod": "Roll Modifier",
+        "Quantity": "Quantity",
+        "Weight": "Weight"
+      },
       "Spell": {
+        "Level": "Spell Level",
         "SpellLVL": "Level {level} Spells",
         "AddLVL": "Add LVL {level}"
       }
