@@ -55,7 +55,7 @@ Hooks.once('init', function () {
   };
   CONFIG.Item.documentClass = BoilerplateItem;
   CONFIG.Item.dataModels = {
-    item: models.BoilerplateItem,
+    gear: models.BoilerplateGear,
     feature: models.BoilerplateFeature,
     spell: models.BoilerplateSpell,
   };

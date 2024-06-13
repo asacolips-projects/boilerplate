@@ -27,7 +27,7 @@
         center all of its child elements content and text. }}
       <div class='resource flex-group-center'>
         <label for='system.health.value' class='resource-label'>
-          {{localize 'BOILERPLATE.Actor.base.Health'}}
+          {{localize 'BOILERPLATE.Actor.base.FIELDS.health.label'}}
         </label>
         <div class='resource-content flexrow flex-center flex-between'>
           <input
@@ -48,7 +48,7 @@
 
       <div class='resource flex-group-center'>
         <label for='system.power.value' class='resource-label'>
-          {{localize 'BOILERPLATE.Actor.base.Power'}}
+          {{localize 'BOILERPLATE.Actor.base.FIELDS.power.label'}}
         </label>
         <div class='resource-content flexrow flex-center flex-between'>
           <input
@@ -70,7 +70,7 @@
       <div class='resource flex-group-center'>
         {{#if (eq actor.type 'character')}}
           <label class='resource-label'>
-            {{localize 'BOILERPLATE.Actor.Character.Level'}}
+            {{localize 'BOILERPLATE.Actor.Character.FIELDS.level.label'}}
           </label>
           <div class='resource-content flexrow flex-center flex-between'>
             <input
@@ -82,7 +82,9 @@
           </div>
         {{/if}}
         {{#if (eq actor.type 'npc')}}
-          <label class='resource-label'>{{localize 'BOILERPLATE.Actor.NPC.CR'}} / {{localize 'BOILERPLATE.Actor.NPC.XP'}}</label>
+          <label class='resource-label'>
+            {{localize 'BOILERPLATE.Actor.NPC.FIELDS.cr.label'}} / {{localize 'BOILERPLATE.Actor.NPC.FIELDS.xp.label'}}
+          </label>
           <div class='resource-content flexrow flex-center flex-between'>
             <input
               type='text'

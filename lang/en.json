@@ -21,16 +21,22 @@
         "Effects": "Effects"
       },
       "base": {
-        "Biography": "Biography",
-        "Health": "Health",
-        "Power": "Power"
+        "FIELDS": {
+          "biography": {"label": "Biography"},
+          "health": {"label": "Health"},
+          "power": {"label": "Power"}
+        }
       },
       "Character": {
-        "Level": "Level"
+        "FIELDS": {
+          "level": {"label": "Level"}
+        }
       },
       "NPC": {
-        "CR": "CR",
-        "XP": "XP"
+        "FIELDS": {
+          "cr": {"label": "CR"},
+          "xp": {"label": "XP"}
+        }
       }
     },
     "Item": {
@@ -40,15 +46,19 @@
         "Effects": "Effects"
       },
       "Gear": {
-        "RollFormula": "Roll Formula",
-        "NumDice": "Number of Dice",
-        "DieSize": "Die Size",
-        "RollMod": "Roll Modifier",
-        "Quantity": "Quantity",
-        "Weight": "Weight"
+        "FIELDS": {
+          "rollFormula": {"label": "Roll Formula"},
+          "numDice": {"label": "Number of Dice"},
+          "dieSize": {"label": "Die Size"},
+          "rollMod": {"label": "Roll Modifier"},
+          "quantity": {"label": "Quantity"},
+          "weight": {"label": "Weight"}
+        }
       },
       "Spell": {
-        "Level": "Spell Level",
+        "FIELDS": {
+          "level": {"label": "Spell Level"}
+        },
         "SpellLVL": "Level {level} Spells",
         "AddLVL": "Add LVL {level}"
       }
@@ -61,7 +71,6 @@
       "Inactive": "Inactive Effects"
     }
   },
-
   "TYPES": {
     "Actor": {
       "character": "Character",
