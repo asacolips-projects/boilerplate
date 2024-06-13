@@ -11,15 +11,23 @@ import { BOILERPLATE } from './helpers/config.mjs';
 /*  Init Hook                                   */
 /* -------------------------------------------- */
 
-Hooks.once('init', function () {
-  // Add utility classes to the global game object so that they're more easily
-  // accessible in global contexts.
-  game.boilerplate = {
+// Add key classes to the global scope so they can be more easily used
+// by downstream developers
+globalThis.boilerplate = {
+  documents: {
     BoilerplateActor,
     BoilerplateItem,
+  },
+  applications: {
+    BoilerplateActorSheet,
+    BoilerplateItemSheet,
+  },
+  utils: {
     rollItemMacro,
-  };
+  },
+};
 
+Hooks.once('init', function () {
   // Add custom constants for configuration.
   CONFIG.BOILERPLATE = BOILERPLATE;
 
