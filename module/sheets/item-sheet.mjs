@@ -26,6 +26,7 @@ export class BoilerplateItemSheet extends api.HandlebarsApplicationMixin(
     form: {
       submitOnChange: true,
     },
+    // Custom property that's merged into `this.options`
     dragDrop: [{ dragSelector: '[data-drag]', dropSelector: null }],
   };
 
@@ -138,9 +139,11 @@ export class BoilerplateItemSheet extends api.HandlebarsApplicationMixin(
    * @protected
    */
   _getTabs(parts) {
+    // If you have sub-tabs this is necessary to change
+    const tabGroup = 'primary';
+    // Default tab for first time it's rendered this session
+    if (!this.tabGroups[tabGroup]) this.tabGroups[tabGroup] = 'description';
     return parts.reduce((tabs, partId) => {
-      // If you have sub-tabs this is necessary to change
-      const tabGroup = 'primary';
       const tab = {
         cssClass: '',
         group: tabGroup,
