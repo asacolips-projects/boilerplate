@@ -5,11 +5,10 @@
   data-tab='description'
 >
   {{! Editors must receive enriched text data from getData to properly handle rolls }}
-  {{editor
-    enrichedDescription
-    target='system.description'
-    engine='prosemirror'
-    button=true
-    editable=editable
-  }}
+  {{#if editable}} 
+    <prose-mirror name="system.description" data-document-u-u-i-d="{{item.uuid}}" value="{{system.description}}" collaborate="true" toggled="true">
+      {{{enrichedDescription}}}
+    </prose-mirror>
+  {{else}} {{{enrichedDescription}}}
+  {{/if}}
 </section>
