@@ -25,7 +25,7 @@
 }
 
 .rollable:hover, .rollable:focus {
-  color: #000;
+  color: var(--boilerplate-c-black);
   text-shadow: 0 0 10px red;
   cursor: pointer;
 }
@@ -278,6 +278,13 @@
 .boilerplate .resource-label {
   font-weight: bold;
 }
+.boilerplate .ability {
+  margin-bottom: 2px;
+}
+.boilerplate .ability-score,
+.boilerplate .ability-mod {
+  flex: 0 0 44px;
+}
 .boilerplate .items-header {
   height: 28px;
   margin: 2px 0;
@@ -491,5 +498,3 @@
 .boilerplate .effects .item .effect-controls {
   border: none;
 }
-
-/*# sourceMappingURL=boilerplate.css.map */
