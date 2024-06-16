@@ -1,4 +1,24 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
+:root {
+  --boilerplate-c-dark: #191813;
+  --boilerplate-c-faint: #c9c7b8;
+  --boilerplate-c-beige: #b5b3a4;
+  --boilerplate-c-tan: #444444;
+  --boilerplate-c-white: #ffffff;
+  --boilerplate-c-black: #000000;
+  --boilerplate-c-groove: #eeede0;
+}
+
+.theme-dark {
+  --boilerplate-c-dark: #c9c7b8;
+  --boilerplate-c-faint: #191813;
+  --boilerplate-c-beige: #444444;
+  --boilerplate-c-tan: #b5b3a4;
+  --boilerplate-c-white: #000000;
+  --boilerplate-c-black: #ffffff;
+  --boilerplate-c-groove: #11121f;
+}
+
 /* Global styles */
 .window-app {
   font-family: "Roboto", sans-serif;
@@ -243,8 +263,14 @@
 .boilerplate .sheet-body .tab .editor {
   height: 100%;
 }
+.boilerplate .tab.biography {
+  flex: 1;
+}
+.boilerplate .tab.biography .editor {
+  height: 100%;
+}
 .boilerplate .tox .tox-editor-container {
-  background: #fff;
+  background: var(--boilerplate-c-white);
 }
 .boilerplate .tox .tox-edit-area {
   padding: 0 8px;
@@ -258,7 +284,7 @@
   padding: 0;
   align-items: center;
   background: rgba(0, 0, 0, 0.05);
-  border: 2px groove #eeede0;
+  border: 2px groove var(--boilerplate-c-groove);
   font-weight: bold;
 }
 .boilerplate .items-header > * {
@@ -277,7 +303,7 @@
   padding: 0;
   overflow-y: auto;
   scrollbar-width: thin;
-  color: #444;
+  color: var(--boilerplate-c-tan);
 }
 .boilerplate .items-list .item-list {
   list-style: none;
@@ -311,13 +337,13 @@
 .boilerplate .items-list .item {
   align-items: center;
   padding: 0 2px;
-  border-bottom: 1px solid #c9c7b8;
+  border-bottom: 1px solid var(--boilerplate-c-faint);
 }
 .boilerplate .items-list .item:last-child {
   border-bottom: none;
 }
 .boilerplate .items-list .item .item-name {
-  color: #191813;
+  color: var(--boilerplate-c-dark);
 }
 .boilerplate .items-list .item .item-name .item-image {
   flex: 0 0 30px;
@@ -338,7 +364,7 @@
   padding: 0;
   align-items: center;
   background: rgba(0, 0, 0, 0.05);
-  border: 2px groove #eeede0;
+  border: 2px groove var(--boilerplate-c-groove);
   font-weight: bold;
 }
 .boilerplate .items-list .items-header > * {
@@ -353,6 +379,107 @@
   flex: 0 0 200px;
   padding: 0 8px;
 }
+.boilerplate .effects-header {
+  height: 28px;
+  margin: 2px 0;
+  padding: 0;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.05);
+  border: 2px groove var(--boilerplate-c-groove);
+  font-weight: bold;
+}
+.boilerplate .effects-header > * {
+  font-size: 14px;
+  text-align: center;
+}
+.boilerplate .effects-header .effect-name {
+  font-weight: bold;
+  padding-left: 5px;
+  text-align: left;
+  display: flex;
+}
+.boilerplate .effects-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  color: var(--boilerplate-c-tan);
+}
+.boilerplate .effects-list .effect-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.boilerplate .effects-list .effect-name {
+  flex: 2;
+  margin: 0;
+  overflow: hidden;
+  font-size: 13px;
+  text-align: left;
+  align-items: center;
+  display: flex;
+}
+.boilerplate .effects-list .effect-name h3, .boilerplate .effects-list .effect-name h4 {
+  margin: 0;
+  white-space: nowrap;
+  overflow-x: hidden;
+}
+.boilerplate .effects-list .effect-controls {
+  display: flex;
+  flex: 0 0 100px;
+  justify-content: flex-end;
+}
+.boilerplate .effects-list .effect-controls a {
+  font-size: 12px;
+  text-align: center;
+  margin: 0 6px;
+}
+.boilerplate .effects-list .effect {
+  align-items: center;
+  padding: 0 2px;
+  border-bottom: 1px solid var(--boilerplate-c-faint);
+}
+.boilerplate .effects-list .effect:last-child {
+  border-bottom: none;
+}
+.boilerplate .effects-list .effect .effect-name {
+  color: var(--boilerplate-c-dark);
+}
+.boilerplate .effects-list .effect .effect-name .effect-image {
+  flex: 0 0 30px;
+  height: 30px;
+  background-size: 30px;
+  border: none;
+  margin-right: 5px;
+}
+.boilerplate .effects-list .effect-prop {
+  text-align: center;
+  border-left: 1px solid #c9c7b8;
+  border-right: 1px solid #c9c7b8;
+  font-size: 12px;
+}
+.boilerplate .effects-list .effects-header {
+  height: 28px;
+  margin: 2px 0;
+  padding: 0;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.05);
+  border: 2px groove var(--boilerplate-c-groove);
+  font-weight: bold;
+}
+.boilerplate .effects-list .effects-header > * {
+  font-size: 12px;
+  text-align: center;
+}
+.boilerplate .effects-list .effects-header .effect-name {
+  padding-left: 5px;
+  text-align: left;
+}
+.boilerplate .effect-formula {
+  flex: 0 0 200px;
+  padding: 0 8px;
+}
 .boilerplate .effects .item .effect-source,
 .boilerplate .effects .item .effect-duration,
 .boilerplate .effects .item .effect-controls {
@@ -364,3 +491,5 @@
 .boilerplate .effects .item .effect-controls {
   border: none;
 }
+
+/*# sourceMappingURL=boilerplate.css.map */

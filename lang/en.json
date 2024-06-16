@@ -12,8 +12,53 @@
       "Actor": "Boilerplate Actor Sheet",
       "Item": "Boilerplate Item Sheet"
     },
+    "Actor": {
+      "Tabs": {
+        "Biography": "Biography",
+        "Features": "Features",
+        "Gear": "Gear",
+        "Spells": "Spells",
+        "Effects": "Effects"
+      },
+      "base": {
+        "FIELDS": {
+          "biography": {"label": "Biography"},
+          "health": {"label": "Health"},
+          "power": {"label": "Power"}
+        }
+      },
+      "Character": {
+        "FIELDS": {
+          "level": {"label": "Level"}
+        }
+      },
+      "NPC": {
+        "FIELDS": {
+          "cr": {"label": "CR"},
+          "xp": {"label": "XP"}
+        }
+      }
+    },
     "Item": {
+      "Tabs": {
+        "Attributes": "Attributes",
+        "Description": "Description",
+        "Effects": "Effects"
+      },
+      "Gear": {
+        "FIELDS": {
+          "rollFormula": {"label": "Roll Formula"},
+          "numDice": {"label": "Number of Dice"},
+          "dieSize": {"label": "Die Size"},
+          "rollMod": {"label": "Roll Modifier"},
+          "quantity": {"label": "Quantity"},
+          "weight": {"label": "Weight"}
+        }
+      },
       "Spell": {
+        "FIELDS": {
+          "level": {"label": "Spell Level"}
+        },
         "SpellLVL": "Level {level} Spells",
         "AddLVL": "Add LVL {level}"
       }
@@ -26,14 +71,13 @@
       "Inactive": "Inactive Effects"
     }
   },
-
   "TYPES": {
     "Actor": {
       "character": "Character",
       "npc": "NPC"
     },
     "Item": {
-      "item": "Item",
+      "gear": "Gear",
       "feature": "Feature",
       "spell": "Spell"
     }
