@@ -1,6 +1,7 @@
 {
   "Actor": {
     "types": ["character", "npc"],
+    "htmlFields": ["biography"],
     "templates": {
       "base": {
         "health": {
@@ -51,6 +52,7 @@
   },
   "Item": {
     "types": ["gear", "feature", "spell"],
+    "htmlFields": ["description"],
     "templates": {
       "base": {
         "description": ""
