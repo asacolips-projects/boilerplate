@@ -1,8 +1,0 @@
-{
-  "Actor": {
-    "types": ["character", "npc"]
-  },
-  "Item": {
-    "types": ["gear", "feature", "spell"]
-  }
-}
