@@ -58,8 +58,8 @@
   ],
   "version": "3.0.0",
   "compatibility": {
-    "minimum": 12,
-    "verified": "12.327"
+    "minimum": "12.328",
+    "verified": "12.328"
   },
   "esmodules": ["module/boilerplate.mjs"],
   "styles": ["css/boilerplate.css"],

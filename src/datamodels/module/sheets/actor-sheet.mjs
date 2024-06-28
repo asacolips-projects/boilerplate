@@ -31,7 +31,6 @@ export class BoilerplateActorSheet extends api.HandlebarsApplicationMixin(
     // Custom property that's merged into `this.options`
     dragDrop: [{ dragSelector: '[data-drag]', dropSelector: null }],
     form: {
-      handler: this.#onSubmitActorForm,
       submitOnChange: true,
     },
   };
@@ -203,6 +202,9 @@ export class BoilerplateActorSheet extends api.HandlebarsApplicationMixin(
    */
   _prepareItems(context) {
     // Initialize containers.
+    // You can just use `this.document.itemTypes` instead
+    // if you don't need to subdivide a given type like
+    // this sheet does with spells
     const gear = [];
     const features = [];
     const spells = {
@@ -252,6 +254,7 @@ export class BoilerplateActorSheet extends api.HandlebarsApplicationMixin(
    * @param {ApplicationRenderContext} context      Prepared context data
    * @param {RenderOptions} options                 Provided render options
    * @protected
+   * @override
    */
   _onRender(context, options) {
     this.#dragDrop.forEach((d) => d.bind(this.element));
@@ -692,18 +695,18 @@ export class BoilerplateActorSheet extends api.HandlebarsApplicationMixin(
    ********************/
 
   /**
-   * Process form submission for the sheet, removing overrides created by active effects
-   * @this {BoilerplateActorSheet}                The handler is called with the application as its bound scope
+   * Submit a document update based on the processed form data.
    * @param {SubmitEvent} event                   The originating form submission event
    * @param {HTMLFormElement} form                The form element that was submitted
-   * @param {FormDataExtended} formData           Processed data for the submitted form
+   * @param {object} submitData                   Processed and validated form data to be used for a document update
    * @returns {Promise<void>}
+   * @protected
+   * @override
    */
-  static async #onSubmitActorForm(event, form, formData) {
-    const submitData = this._prepareSubmitData(event, form, formData);
+  async _processSubmitData(event, form, submitData) {
     const overrides = foundry.utils.flattenObject(this.actor.overrides);
     for (let k of Object.keys(overrides)) delete submitData[k];
-    await this.actor.update(submitData);
+    await this.document.update(submitData);
   }
 
   /**
