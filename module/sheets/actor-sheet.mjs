@@ -251,6 +251,7 @@ export class BoilerplateActorSheet extends api.HandlebarsApplicationMixin(
    * @param {ApplicationRenderContext} context      Prepared context data
    * @param {RenderOptions} options                 Provided render options
    * @protected
+   * @override
    */
   _onRender(context, options) {
     this.#dragDrop.forEach((d) => d.bind(this.element));
@@ -697,6 +698,7 @@ export class BoilerplateActorSheet extends api.HandlebarsApplicationMixin(
    * @param {object} submitData                   Processed and validated form data to be used for a document update
    * @returns {Promise<void>}
    * @protected
+   * @override
    */
   async _processSubmitData(event, form, submitData) {
     const overrides = foundry.utils.flattenObject(this.actor.overrides);
