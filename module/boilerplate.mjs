@@ -13,7 +13,7 @@ import { BOILERPLATE } from './helpers/config.mjs';
 
 // Add key classes to the global scope so they can be more easily used
 // by downstream developers
-globalThis.boilerplate = {
+globalThis.Boilerplate = {
   documents: {
     BoilerplateActor,
     BoilerplateItem,
